@@ -1,0 +1,518 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+ Month and Year
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+<main class="content">
+    {% include "main/includes/header.html" %} 
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+      <div class="d-block mb-4 mb-md-0">
+        <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+          <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+            <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
+            <li class="breadcrumb-item active" aria-current="page">Manage Month & Year</li>
+           
+           
+          </ol>
+        </nav>
+        <h2 class="h4">Manage Month & Year</h2>
+        <p class="mb-0"></p>
+      </div>
+
+      <div class="btn-toolbar mb-2 mb-md-0">
+          <button class="btn btn-sm btn-primary" data-toggle="modal"
+        data-target="#add_data_Modal" style="margin-right:10px;"><span
+            class="fas fa-plus mr-2"></span> Add New Month & Year</button>
+
+
+            
+
+              <!--Modal Start-->
+              <div class="modal fade" id="add_data_Modal" tabindex="-1" role="dialog"
+              aria-labelledby="add_data_Modal" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-body p-0">
+                    <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
+                        aria-label="Close"></button>
+                      <div class="card-header border-0 text-center pb-0">
+                        <h2 class="mb-0 h5">Add New Month & Year</h2>
+                      </div>
+                      <div class="card-body">
+
+
+                        <form method="post" id="add_new_month_year_form">
+                          {% csrf_token %}
+                            <div class="form-group mb-4"><label for="Month">Month</label>
+                                <div class="input-group">
+                                      <span class="input-group-text" id="basic-addon3">
+                                           <span class="fas fa-calendar-alt"></span>
+                                        </span>
+                              {{add_form.month}}
+                            </div>
+                               <span>(Required)</span>
+                            </div>
+
+
+
+
+                          <div class="form-group mb-4"><label for="Year">Year</label>
+                            <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                                  class="fas  fa-calendar-alt"></span></span> 
+                                  {{add_form.year}}
+                                </div>
+                                <span>(Required)</span>
+                          </div>
+
+                          <div class="form-check mb-4">
+                            {{add_form.current}}
+                            <label class="form-check-label" for="add-current">Current</label>
+                          </div>
+
+                          <div class="form-check mb-4">
+                            {{add_form.open}}
+                            <label class="form-check-label" for="add-open">Open</label>
+                          </div>
+                          <input type="submit" id="add-button" class="btn btn-block btn-primary" value="Save" name="add-month-year"/>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Modal End-->
+            <a href="/dashboard" class="btn btn-sm btn-secondary" style="margin-right:10px">Dashboard</a>
+      </div>
+    </div>
+    
+
+    
+    <div class="card card-body border-light shadow-sm table-wrapper table-responsive" style="width:60%; margin:auto">
+     
+      <table class="table user-table table-hover table-striped align-items-center" id="datatable">
+        <thead>
+          <tr>
+
+            <th class="border-bottom">
+             #
+            </th>
+            
+            <th class="border-bottom">Month</th>
+            <th class="border-bottom">Year</th>
+            <th class="border-bottom">Status</th>
+            <th class="border-bottom">Open/Closed</th>
+            <th class="border-bottom">Action</th>
+           
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in month_Year.all %}
+          <tr>
+
+            <td>
+              {{ forloop.counter }}
+            </td>
+           
+            <td><span class="font-weight-normal month{{item.id}}">{{item.month}} </span></td>
+            <td><span class="font-weight-normal year{{item.id}}">{{item.year}}</span></td>
+            {% if item.current == True %}
+            <td><span class="font-weight-normal">Current</span></td>
+            {% else %}
+            <td><span class="font-weight-normal"></span></td>
+            {% endif %}
+
+            {% if item.open == True %}
+            <td><span class="font-weight-normal">Open</span></td>
+            {% else %}
+            <td><span class="font-weight-normal">Closed</span></td>
+            {% endif %}
+
+            <td>
+              <button class="btn btn-primary btn-xs" data-toggle="modal" type="button" data-target="#edit_data_Modal{{item.id}}"><span class="fas fa-pen"></span></button>
+              {% if item.open == False and item.current == False %}
+                  {% check_month_year_content item.id as content %}
+                  {% if content == 0 %}
+                     <span class="delete" data-id='{{item.id}}'
+                        style='cursor:pointer;'>
+                        <button class="btn btn-danger btn-xs"><span class="fas fa-trash-alt"></span></button>
+                    </span>
+                  {% else %}
+                      <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>
+                        <span class="fas fa-trash-alt"></span>
+                      </button>
+                  {% endif %}     
+              {% else %}
+                    <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>
+                      <span class="fas fa-trash-alt"></span>
+                    </button>    
+              {% endif %}                                     
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+   
+    </div>
+      
+     
+    <footer class="footer section py-5">
+    
+    </footer>
+  </main>
+  {% for item in month_Year.all %}
+  <!--Edit Modal Start-->
+  <div class="modal fade" id="edit_data_Modal{{item.id}}" tabindex="-1" role="dialog"
+  aria-labelledby="add_data_Modal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
+            aria-label="Close"></button>
+          <div class="card-header border-0 text-center pb-0">
+            <h2 class="mb-0 h5">{{item.month}} {{item.year}}</h2>
+          </div>
+          <div class="card-body">
+            <form method="post" action="{% url 'month-year' %}" class="edit_new_month_year_form" id="edit_new_month_year_form">
+               {% csrf_token %}
+                <div class="form-group mb-4"><label for="Month">Month</label>
+                    <div class="input-group">
+                          <span class="input-group-text" id="basic-addon3">
+                               <span class="fas fa-calendar-alt"></span>
+                            </span>
+                  <select class="form-select mb-0 edit-month" id="edit-month{{item.id}}" name="month" aria-label="month" required>
+                          <option value="{{item.month}}">{{item.month}}</option>
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                   </select>           
+                </div>
+                   <span>(Required)</span>
+                </div>
+              <div class="form-group mb-4"><label for="Year">Year</label>
+                <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                      class="fas  fa-calendar-alt"></span></span> 
+                      <input type="text" class="form-control edit-year" style="border-left:1px solid; padding-left:6px"
+                    placeholder="Year" id="edit-year{{item.id}}" name="year"  data-id="{{item.id}}" Required value="{{item.year}}"/></div>
+                    <span>(Required)</span>
+              </div>
+
+              <div class="form-check mb-4">
+                {% if item.current == True %}
+                <input class="form-check-input" type="checkbox" value="clicked" id="edit-current" name="current" checked> 
+                {% else %}
+                <input class="form-check-input" type="checkbox" value="clicked" id="edit-current" name="current"> 
+                {% endif %}
+                <label class="form-check-label" for="current">Current</label>
+              </div>
+
+              <div class="form-check mb-4">
+                {% if item.open == True %}
+                <input class="form-check-input" type="checkbox" value="clicked" id="edit-open" name="open" checked>
+                {% else %} 
+                <input class="form-check-input" type="checkbox" value="clicked" id="edit-open" name="open">
+                {% endif %}
+                <label class="form-check-label" for="Open">Open</label>
+              </div>
+          
+              <input type="hidden" name="edit-id" value="{{item.id}}">
+              <input type="submit" id="edit-button{{item.id}}" class="btn btn-block btn-primary" value="Save" name="edit-month-year"/>
+            </form>
+          
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Edit Modal Start-->
+{% endfor %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // Delete 
+        $('#datatable').on('click', '.delete', function() {
+            var el = this;
+            
+
+            // Delete id
+            var deleteid = $(this).data('id');
+
+            var month = $(".month"+deleteid).text();
+            var year = $(".year"+deleteid).text();
+
+            $.confirm({
+                title: 'WARNING!',
+                content: 'Are you sure you want to remove <strong>'+ month +' '+ year +'</strong>?',
+                buttons: {
+                    Yes: {
+                        text: 'Yes',
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            // AJAX Request
+                            $.ajax({
+                                url: '{% url "month-year" %}',
+                                type: 'POST',
+                                data: {
+                                    id: deleteid,
+                                    tag: "delete",
+                                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                                },
+                               
+                                success: function (response) {
+
+                                    if (response == 1) {
+                                        // Remove row from Table
+                                        $(el).closest('tr').css('background', 'red');
+                                        $(el).closest('tr').fadeOut(800, function () {
+                                            $(this).remove();
+                                        });
+                                    } else {
+                                        alert('Invalid Selection.');
+                                    }
+
+                                }
+
+                            });
+                            setInterval('location.reload()', 1000);
+                        }
+                    },
+                    cancel: function () {
+
+                    }
+                }
+            });
+
+        });
+
+    });
+</script>
+<style>
+  .error{
+  color: red;
+  }
+  label
+  /* input, */ {
+  border: 0;
+  margin-bottom: 3px;
+  display: block;
+  width: 100%;
+  }
+
+  .common_box_body {
+  padding: 15px;
+  border: 12px solid #28BAA2;
+  border-color: #28BAA2;
+  border-radius: 15px;
+  margin-top: 10px;
+  background: #d4edda;
+  }
+
+  .form_error span {
+  width: 80%;
+  height: 35px;
+  margin: 3px 10%;
+  font-size: 1.1em;
+  color: #D83D5A;
+  }
+  .form_error input {
+  border: 1px solid #D83D5A;
+  }
+
+  /*Styling in case no errors on form*/
+  .form_success span {
+  width: 80%;
+  height: 35px;
+  margin: 3px 10%;
+  font-size: 1.1em;
+  color: green;
+  }
+  .form_success input {
+  border: 1px solid green;
+  }
+</style>
+<script>
+ //add new month year exist check
+  $('document').ready(function(){
+  var month_year_state = true;
+ 
+  $('#add-month,#add-year').on('change', function(){
+   var year = $('#add-year').val();
+   var month = $('#add-month').val();
+   
+   $.ajax({
+     url: '{% url "check-month-year" %}',
+     type: 'post',
+     data: {
+         'month_year_check' : 1,
+         'month' : month,
+         'year' : year,
+         csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+     },
+     success: function(response){
+       if (response == 'taken' ) {
+           month_year_state = false;
+           $('#add-year').parent().removeClass();
+           $('#add-year').parent().addClass("form_error");
+           $('#add-year').siblings("span").text('Sorry. '+month +' '+ year+' already exist');
+           $('#add-button').prop('disabled', true);
+           $('#add-year').siblings("span").show();
+       }else if (response == 'not_taken') {
+           month_year_state = true;
+           $('#add-year').parent().removeClass();
+           $('#add-year').parent().addClass("form_success");
+           $('#add-year').siblings("span").text(month +' '+ year+' is available');
+           $('#add-button').prop('disabled', false);
+           $('#add-year').siblings("span").show();
+       }else if (response == 'not_number') {
+           month_year_state = false;
+           $('#add-year').parent().removeClass();
+           $('#add-year').parent().addClass("form_error");
+           $('#add-year').siblings("span").text('Only digits allowed for the Year');
+           $('#add-year').siblings("span").show();
+           $('#add-button').prop('disabled', true);
+       }else {
+           month_year_state = false;
+           $('#add-year').siblings("span").hide();
+           $('#add-button').prop('disabled', true);
+       }
+     }
+   });
+  });		
+   
+ });
+
+//add new month year exist check
+</script>
+
+<script>
+  //edit new month year exist check
+   $('document').ready(function(){
+   var month_year_state = true;
+  
+   $('.edit-month,.edit-year').on('blur', function(){
+    var id = $(this).data('id');
+    var year = $('#edit-year'+id).val();
+    var month = $('#edit-month'+id).val();
+    
+    $.ajax({
+      url: '{% url "check-month-year" %}',
+      type: 'post',
+      data: {
+          'id': id,
+          'month_year_check2' : 2,
+          'month' : month,
+          'year' : year,
+          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function(response){
+        if (response == 'taken' ) {
+            month_year_state = false;
+            $('#edit-year'+id).parent().removeClass();
+            $('#edit-year'+id).parent().addClass("form_error");
+            $('#edit-year'+id).siblings("span").text('Sorry. '+month +' '+ year+' already exist');
+            $('#edit-button'+id).prop('disabled', true);
+            $('#edit-year'+id).siblings("span").show();
+        }else if (response == 'not_taken') {
+            month_year_state = true;
+            $('#edit-year'+id).parent().removeClass();
+            $('#edit-year'+id).parent().addClass("form_success");
+            $('#edit-year'+id).siblings("span").text(month +' '+ year+' is available');
+            $('#edit-button'+id).prop('disabled', false);
+            $('#edit-year'+id).siblings("span").show();
+        }else if (response == 'not_number') {
+            month_year_state = false;
+            $('#edit-year'+id).parent().removeClass();
+            $('#edit-year'+id).parent().addClass("form_error");
+            $('#edit-year'+id).siblings("span").text('Only digits allowed for the Year');
+            $('#edit-year'+id).siblings("span").show();
+            $('#edit-button'+id).prop('disabled', true);
+        }else {
+            month_year_state = false;
+            $('#edit-year'+id).siblings("span").hide();
+            $('#edit-button'+id).prop('disabled', true);
+        }
+      }
+    });
+   });		
+    
+  });
+ 
+ //edit new month year exist check
+ </script>
+
+<script src="{% static 'main/external/js/jquery.validate.min.js' %}"></script>
+<script>
+  //add new month year validate
+$(document).ready(function () {
+  $('#add_new_month_year_form').validate({
+  
+    rules: {
+      month: {
+        required: true
+      },
+
+      year: {
+        required: true
+      },
+
+     
+    },
+    messages: {
+      month: 'Required',
+      year: 'Required',
+    },
+    submitHandler: function (form) {
+      form.submit();
+    }
+  });
+});
+//add new month year validate
+</script>
+
+<script>
+  //edit new month year validate
+  $(document).ready(function () {
+   $(".edit_new_month_year_form").each(function(){
+      $(this).validate({
+    
+        rules: {
+      month: {
+        required: true
+      },
+
+      year: {
+        required: true
+      },
+
+     
+    },
+    messages: {
+      month: 'Required',
+      year: 'Required',
+    },
+      submitHandler: function (form) {
+        form.submit();
+      }
+    });
+   });
+  });
+  //edit new month year validate
+  </script>
+  {% endblock %}  

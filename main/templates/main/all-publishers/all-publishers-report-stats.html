@@ -1,0 +1,160 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+{{category}} Report Statistics:: {{month_year.month}} {{month_year.year}}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+
+
+
+<style type="text/css">
+  @media print {
+    .card-print {
+      width: 100%;
+    }
+
+    .print-display {
+      display: none
+    }
+
+
+  }
+
+
+  @media screen {
+
+    .card-print {
+      width: 50%;
+      margin: auto;
+    }
+  }
+
+
+
+
+
+
+  @media only screen and (max-width: 800px) {
+    .card-print {
+      width: 100%;
+    }
+
+
+
+
+
+  }
+
+  @media only screen and (max-width: 640px) {
+
+    .card-print {
+      width: 100%;
+    }
+
+
+
+
+
+  }
+</style>
+
+<main class="content">
+  {% include "main/includes/header.html" %}
+
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    <div class="d-block mb-4 mb-md-0">
+      <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+        <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}"><span class="fas fa-home"></span></a></li>
+          <li class="breadcrumb-item"><a href="{% url 'all-active-publishers' %}">All Publishers</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'choose-category' %}">Select Report Category</a></li>
+          <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER|escape}}">{{category}} Report</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Report Statistics</li>
+        </ol>
+      </nav>
+      <h2 class="h4">{{category}} Report Statistics</h2>
+      <p class="mb-0"><strong>For {{month_year.month}} {{month_year.year}}</strong></p>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+
+      <a class="btn btn-sm btn-info print-display" style="margin-right:80px;" onclick="window.print()">Print</a>
+      <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-sm btn-secondary print-display"
+        style="margin-right:10px">Back</a>
+
+    </div>
+  </div>
+  <div class="card border-light shadow-sm card-print">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-centered table-nowrap mb-0 rounded">
+          <thead class="thead-light">
+            <tr>
+              <th class="border-0"></th>
+              <th class="border-0">Total</th>
+              <th class="border-0">Average</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Publishers Reported</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{count_report}}</td>
+              <td class="border-0"> <span class="font-weight-bold"></span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Hours</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_hours}}</td>
+              <td class="border-0"> <span class="font-weight-bold">{{avg_hours}}</span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Placements</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_placements}}</td>
+              <td class="border-0 "> <span class="font-weight-bold">{{avg_placements}}</span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Return Visits</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_return_visits}}</td>
+              <td class="border-0 "> <span class="font-weight-bold">{{avg_return_visits}}</span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Bible Studies</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_bible_studies}}</td>
+              <td class="border-0 "><span class="font-weight-bold">{{avg_bible_studies}}</span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Video Showings</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_video_showings}}</td>
+              <td class="border-0 "> <span class="font-weight-bold">{{avg_video_showings}}</span></td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer section py-5">
+
+  </footer>
+</main>
+{% endblock %} 

@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title> {% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta name="title" content="">
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link rel="canonical" href="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="">
+    <meta property="twitter:card" content="">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="">
+    <meta property="twitter:description" content="">
+    <meta property="twitter:image" content="">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'main/assets/img/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'main/assets/img/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'main/assets/img/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'main/assets/img/favicon/site.webmanifest' %}">
+    <link rel="mask-icon" href="{% static 'main/assets/img/favicon/safari-pinned-tab.svg' %}" color="#ffffff">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <link type="text/css" href="{% static 'main/vendor/%40fortawesome/fontawesome-free/css/all.min.css' %}"
+        rel="stylesheet">
+    <link type="text/css" href="{% static 'main/vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'main/vendor/notyf/notyf.min.css" rel="stylesheet' %}">
+    <link type="text/css" href="{% static 'main/vendor/fullcalendar/main.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'main/vendor/dropzone/dist/min/dropzone.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'main/vendor/choices.js/public/assets/styles/choices.min.css' %}"
+        rel="stylesheet">
+    <link type="text/css" href="{% static 'main/vendor/leaflet/dist/leaflet.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
+
+    <link type="text/css" href="{% static 'main/css/volt.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'main/css/mobile-table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-THQTXJ7" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-md-none"><a class="navbar-brand mr-lg-5"
+            href="#"><img class="navbar-brand-dark" src="{% static 'main/assets/img/brand/light.svg' %}" alt="Logo">
+            <img class="navbar-brand-light" src="{% static 'main/assets/img/brand/dark.svg' %}" alt="Logo"></a>
+        <div class="d-flex align-items-center"><button class="navbar-toggler d-md-none collapsed" type="button"
+                data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button></div>
+    </nav>
+
+
+    <!--Navbar Start-->
+
+    <nav id="sidebarMenu" class="sidebar d-md-block bg-primary text-white collapse" data-simplebar>
+        <div class="sidebar-inner px-4 pt-3">
+            <div
+                class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar lg-avatar mr-4"><img src="../../../../assets/img/team/profile-picture-3.jpg"
+                            class="card-img-top rounded-circle border-white"
+                            alt="{{publisher.publisherprofile.first_name}} {{publisher.publisherprofile.last_name}}">
+                    </div>
+                    <div class="d-block">
+                        <h2 class="h6">Hello, {{publisher.publisherprofile.first_name}}</h2><a href="/logout/"
+                            class="btn btn-secondary text-dark btn-xs"><span class="mr-2"><span
+                                    class="fas fa-sign-out-alt"></span></span>Sign Out</a>
+                    </div>
+                </div>
+                <div class="collapse-close d-md-none"><a href="#sidebarMenu" class="fas fa-times" data-toggle="collapse"
+                        data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="true"
+                        aria-label="Toggle navigation"></a></div>
+            </div>
+            <ul class="nav flex-column pt-3 pt-md-0">
+                {% if nav == 'Dashboard' %}
+                <li class="nav-item active"><span
+                        class="nav-link collapsed d-flex justify-content-between align-items-center"
+                        data-toggle="collapse" data-target="#submenu-dashboard"><span><span class="sidebar-icon"><span
+                                    class="fas fa-chart-pie"></span></span> <span class="sidebar-text">Dashboard</span>
+                        </span></span>
+                </li>
+                {% else %}
+                <li class="nav-item"><a href="/dashboard/"><span
+                            class="nav-link collapsed d-flex justify-content-between align-items-center"
+                            data-toggle="collapse" data-target="#submenu-dashboard"><span><span
+                                    class="sidebar-icon"><span class="fas fa-chart-pie"></span></span> <span
+                                    class="sidebar-text">Dashboard</span> </span></span></a>
+                </li>
+                {% endif %}
+                {% if nav == 'Publishers' %}
+                <li class="nav-item active"><span
+                        class="nav-link collapsed d-flex justify-content-between align-items-center"
+                        data-toggle="collapse" data-target="#submenu-publishers"><span><span class="sidebar-icon"><span
+                                    class="fas fa-user"></span></span> <span class="sidebar-text">Publishers</span>
+                        </span></span>
+                </li>
+                {% else %}
+                <li class="nav-item "><a href="/publishers/all-active-publishers" class="nav-link"><span
+                            class="sidebar-icon"><span class="fas fa-user"></span></span> <span
+                            class="sidebar-text">Publishers</span></a></li>
+                {% endif %}
+
+                <li class="nav-item"><a href="../groups/all-groups.html" class="nav-link"><span
+                            class="sidebar-icon"><span class="fas fa-table"></span></span> <span
+                            class="sidebar-text">Groups</span></a></li>
+
+                <li class="nav-item"><a href="../attendance/attendance-choose-month-year.html" class="nav-link"><span
+                            class="sidebar-icon"><span class="fas fa-clipboard-list"></span></span> <span
+                            class="sidebar-text">Attendance</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!--Navbar End-->
+    {% block content %}
+    {% endblock %}
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+<script src="{% static 'main/vendor/popper.js/dist/umd/popper.min.js' %}"></script>
+<script src="{% static 'main/vendor/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'main/vendor/onscreen/dist/on-screen.umd.min.js' %}"></script>
+<script src="{% static 'main/vendor/nouislider/distribute/nouislider.min.js' %}"></script>
+<script src="{% static 'main/vendor/jarallax/dist/jarallax.min.js' %}"></script>
+<script src="{% static 'main/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+<script src="{% static 'main/vendor/countup.js/dist/countUp.umd.js' %}"></script>
+<script src="{% static 'main/vendor/chartist/dist/chartist.min.js' %}"></script>
+<script src="{% static 'main/vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %}"></script>
+<script src="{% static 'main/vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+<script src="{% static 'main/vendor/simple-datatables/dist/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'main/vendor/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+<!-- <script src="../../cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script> -->
+<script src="{% static 'main/vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+<script src="{% static 'main/vendor/fullcalendar/main.min.js' %}"></script>
+<script src="{% static 'main/vendor/dropzone/dist/min/dropzone.min.js' %}"></script>
+<script src="{% static 'main/vendor/choices.js/public/assets/scripts/choices.min.js' %}"></script>
+<script src="{% static 'main/vendor/notyf/notyf.min.js' %}"></script>
+<script src="{% static 'main/vendor/leaflet/dist/leaflet.js' %}"></script>
+<script src="{% static 'main/vendor/svgmap/dist/svgMap.min.js' %}"></script>
+<script src="{% static 'main/vendor/simplebar/dist/simplebar.min.js' %}"></script>
+<!-- <script async defer="defer" src="../../buttons.github.io/buttons.js"></script> -->
+<script src="{% static 'main/assets/js/volt.js' %}"></script>
+
+{% include "main/includes/js.html" %}
+<script>
+    // ##################### Print #######
+    function printPageArea(areaID) {
+        var printContent = document.getElementById(areaID);
+        var WinPrint = window.open('', '', 'width=900,height=650');
+        WinPrint.document.write(printContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+        WinPrint.close();
+    }
+
+</script>
+
+</html>

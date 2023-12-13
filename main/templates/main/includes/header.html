@@ -1,0 +1,74 @@
+{% load static %}
+{% load custom_template_tags %}
+
+{% waiting_room_notifications as waiting_room_notifications %}
+{% waiting_room_notifications_top_5 as waiting_room_top_5 %}
+<nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark pl-0 pr-2 pb-0">
+    <div class="container-fluid px-0">
+      <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
+        <div class="d-flex align-items-center"><button id="sidebar-toggle"
+            class="sidebar-toggle mr-3 btn btn-icon-only btn-lg btn-circle d-none d-md-inline-block"><span
+              class="fas fa-bars"></span></button>
+        </div>
+       
+          <!-- Waiting Room -->
+        <ul class="navbar-nav align-items-center">
+          {% if publisher.publisherprofile.privilege == "1" %}
+          <li class="nav-item dropdown"><a class="nav-link text-dark mr-lg-3 icon-notifications"
+              data-unread-notifications="true" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false"><span class="icon icon-sm"><span class="fas fa-bell {% if waiting_room_notifications > 0 %} bell-shake {% endif %}"></span> <span
+                  class="{% if waiting_room_notifications > 0 %} icon-badge {% endif %} rounded-circle unread-notifications"></span></span></a>
+            <div class="dropdown-menu dashboard-dropdown dropdown-menu-lg dropdown-menu-center mt-2 py-0">
+              <div class="list-group list-group-flush"><a href="/dashboard/waiting-room"
+                  class="text-center text-primary font-weight-bold border-bottom border-light py-3">Waiting Room({% waiting_room_notifications %})</a>
+                {% for waiting_room_pub in waiting_room_top_5 %}  
+                <a href="/dashboard/waiting-room" class="list-group-item list-group-item-action border-bottom border-light">
+                  <div class="row align-items-center">
+                    <div class="col-auto"> <img alt="{{waiting_room_pub.first_name}} {{waiting_room_pub.last_name}}"
+                        src="{% static 'assets/img/team/profile-picture-1.jpg' %}"
+                        class="user-avatar lg-avatar rounded-circle"></div>
+                    <div class="col pl-0 ml--2">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h4 class="h6 mb-0 text-small">{{waiting_room_pub.first_name}} {{waiting_room_pub.last_name}}</h4>
+                        </div>
+                        <div class="text-right"><small class="text-danger">{% time_ago  waiting_room_pub.created_at %}</small></div>
+                      </div>
+                    </div>
+                  </div>
+                </a> 
+                {% endfor %}
+                <a href="/dashboard/waiting-room" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+              </div>
+            </div>
+          </li>
+          <!-- Waiting Room -->
+          {% endif %}
+          <li class="nav-item dropdown"><a class="nav-link pt-1 px-0" href="#" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <div class="media d-flex align-items-center"><img class="user-avatar md-avatar rounded-circle"
+                  alt="{{publisher.publisherprofile.first_name}} {{publisher.publisherprofile.last_name}}" src="{% static 'main/assets/img/team/profile-picture-3.jpg' %}">
+                <div class="media-body ml-2 text-dark align-items-center d-none d-lg-block"><span
+                    class="mb-0 font-small font-weight-bold">{{publisher.publisherprofile.first_name}} {{publisher.publisherprofile.last_name}}</span></div>
+              </div>
+            </a>
+            <div class="dropdown-menu dashboard-dropdown dropdown-menu-right mt-2"><a
+                class="dropdown-item font-weight-bold" href="../publisher-profile/publisher-profile.html"><span class="far fa-user-circle"></span>My Profile</a>
+              
+              <a class="dropdown-item font-weight-bold" href="#"><span
+                  class="fas fa-envelope-open-text"></span>Messages</a> 
+              <div role="separator" class="dropdown-divider"></div><a class="dropdown-item font-weight-bold"
+                href="/logout/"><span class="fas fa-sign-out-alt text-danger"></span>Logout</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!--Loading Logo-->
+  <div class="preloader bg-soft flex-column justify-content-center align-items-center"><img
+    class="loader-element animate__animated animate__jackInTheBox" src="{% static 'main/assets/img/brand/light.svg' %}" height="60"
+    alt="Volt logo">
+  </div>
+  <!--Loading Logo-->

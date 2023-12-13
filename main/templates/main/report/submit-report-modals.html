@@ -1,0 +1,255 @@
+{% load custom_template_tags %}
+
+<!--Modal Add Inline Start-->
+<div class="modal fade" id="add_inline_Modal{{ my_publisher.id }}" tabindex="-1" role="dialog" aria-labelledby="add_data_Modal" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
+          aria-label="Close"></button>
+        <div class="card-header border-0 text-center pb-0">
+          <h2 class="mb-0 h5">Add Report</h2>
+        </div>
+        <div class="card-body">
+          <form method="post" id="add_inline_form">
+            <div class="form-group mb-4"><label for="publisher">Publisher</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="text" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="" disabled  value="{{ my_publisher.first_name }} {{ my_publisher.last_name }}"/></div>
+                  <span></span>
+            </div>
+            <input type="hidden" name="publisher_username" id="publisher_username{{ my_publisher.id }}" value="{{ my_publisher.username }}" />
+            <div class="form-group mb-4"><label for="placements">Placements</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="number" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="Placements" id="placements{{ my_publisher.id }}" name="placements" value="" /></div>
+                  <span></span>
+            </div>
+            <div class="form-group mb-4"><label for="video">Video Showings</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="number" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="Video Showings" id="video{{ my_publisher.id }}" name="video" value=""/></div>
+                  <span></span>
+            </div>
+            <div class="form-group">
+              <div class="form-group mb-4"><label for="hours">Hours</label>
+                <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                      class="fas fa-user-check"></span></span>
+                       <input type="number" style="border-left:1px solid; padding-left:6px"
+                    placeholder="Hours" class="form-control" id="hours{{ my_publisher.id }}" name="hours" required value=""/></div>
+                    <span>(Required)</span>
+                    <div class="add_inline_hour_err{{ my_publisher.id }}"></div>
+              </div>
+            </div>
+              <div class="form-group">
+                  <div class="form-group mb-4"><label for="return-visit">Return Visits</label>
+                    <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                          class="fas fa-user-check"></span></span>
+                           <input type="number" style="border-left:1px solid; padding-left:6px"
+                        placeholder="Return Visits" class="form-control" id="return_visit{{ my_publisher.id }}" name="return-visit" value=""/></div>
+                        <span></span>
+                  </div>
+              </div>
+                  <div class="form-group">
+                      <div class="form-group mb-4"><label for="bible-study">Bible Studies</label>
+                        <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                              class="fas fa-user-check"></span></span>
+                               <input type="number" style="border-left:1px solid; padding-left:6px"
+                            placeholder="Bible Studies" class="form-control" id="bible_study{{ my_publisher.id }}" name="bible-study" value=""/></div>
+                            <span>(Bible Studies MUST not be greater than Return Visits)</span>
+                            <div class="add_inline_bs_err{{ my_publisher.id }}"></div>
+                      </div>
+                  </div>
+                      <div class="form-group">
+                          <div class="form-group mb-4"><label for="Comments">Comments</label>
+                            <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                                  class="fas fa-user-check"></span></span>
+                                  <textarea placeholder="Comments" name="comments" id="comments{{ my_publisher.id }}"></textarea>
+                              </div>
+                                <span></span>
+                          </div>
+                      </div>
+            <input type="submit" data-id="{{ my_publisher.id }}" class="btn btn-block btn-primary submit-add-inline" value="Save" name="submit"/>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!--Modal Add Inline End-->
+
+
+<!--Modal View Start-->
+<div class="modal fade" id="view_data_Modal{{ my_publisher.id }}" tabindex="-1" role="dialog"
+aria-labelledby="add_data_Modal" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
+          aria-label="Close"></button>
+        <div class="card-header border-0 text-center pb-0">
+          <h2 class="mb-0 h5">{{ my_publisher.first_name }} {{ my_publisher.last_name }}</h2>
+        </div>
+        <div class="card-body">
+
+          {% submit_report_get_publisher_report my_publisher.username month_year.id as report %}
+          <form>
+            <div class="form-group mb-4"><label for="publisher">Publisher</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="text" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="" disabled  value="{{ my_publisher.first_name }} {{ my_publisher.last_name }}"/></div>
+                  <span></span>
+            </div>
+            <div class="form-group mb-4"><label for="placements">Placements</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="number" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="" value="{% for r in report %}{{ r.placements }}{% endfor %}" disabled/></div>
+                  <span></span>
+            </div>
+            <div class="form-group mb-4"><label for="video">Video Showings</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="number" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="" value="{% for r in report %}{{ r.video_showings }}{% endfor %}" disabled/></div>
+                  <span></span>
+            </div>
+            
+            <div class="form-group">
+              <div class="form-group mb-4"><label for="hours">Hours</label>
+                <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                      class="fas fa-user-check"></span></span>
+                       <input type="number" style="border-left:1px solid; padding-left:6px"
+                    placeholder="" class="form-control" value="{% for r in report %}{{ r.hours }}{% endfor %}" disabled/></div>
+                    <span>(Required)</span>
+              </div>
+          </div>
+
+              <div class="form-group">
+                  <div class="form-group mb-4"><label for="return-visit">Return Visits</label>
+                    <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                          class="fas fa-user-check"></span></span>
+                           <input type="number" style="border-left:1px solid; padding-left:6px"
+                        placeholder="" class="form-control" value="{% for r in report %}{% if r.return_visits == '0' %} {% else %}{{ r.return_visits }}{% endif %}{% endfor %}" disabled/></div>
+                        <span></span>
+                  </div>
+              </div>
+                  <div class="form-group">
+                      <div class="form-group mb-4"><label for="bible-study">Bible Studies</label>
+                        <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                              class="fas fa-user-check"></span></span>
+                               <input type="number" style="border-left:1px solid; padding-left:6px"
+                            placeholder="" class="form-control" value="{% for r in report %}{% if r.bible_studies == '0' %} {% else %}{{ r.bible_studies }}{% endif %}{% endfor %}" disabled/></div>
+                            <span>(Bible Studies MUST not be greater than Return Visits)</span>
+                      </div>
+                  </div>
+          
+                        <div class="form-group">
+                          <div class="form-group mb-4"><label for="surname">Comments</label>
+                            <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                                  class="fas fa-user-check"></span></span>
+                                  <textarea placeholder="" disabled>{% for r in report %}{{ r.comments }}{% endfor %}</textarea>
+                              </div>
+                                <span></span>
+                          </div>
+                        </div>
+          </form>
+        
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!--Modal View End-->
+
+
+
+<!--Modal Edit Start-->
+<div class="modal fade" id="edit_data_Modal{{ my_publisher.id }}" tabindex="-1" role="dialog"
+aria-labelledby="add_data_Modal" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
+          aria-label="Close"></button>
+        <div class="card-header border-0 text-center pb-0">
+          <h2 class="mb-0 h5">Edit Report</h2>
+        </div>
+        <div class="card-body">
+          <form method="post" id="edit_report_form">
+            {% csrf_token %}
+            <div class="form-group mb-4"><label for="publisher">Publisher</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="text" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="Publishers" disabled  value="{{ my_publisher.first_name }} {{ my_publisher.last_name }}"/></div>
+                  <span></span>
+            </div>
+            <div class="form-group mb-4"><label for="placements">Placements</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="number" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="Placements" id="placements-edit-{% for r in report %}{{ r.id }}{% endfor %}" name="placements" value="{% for r in report %}{{ r.placements }}{% endfor %}" /></div>
+                  <span></span>
+            </div>
+            <div class="form-group mb-4"><label for="video">Video Showings</label>
+              <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                    class="fas fa-user-check"></span></span> 
+                    <input type="number" class="form-control" style="border-left:1px solid; padding-left:6px"
+                  placeholder="Video Showings" id="video-edit-{% for r in report %}{{ r.id }}{% endfor %}" name="video" value="{% for r in report %}{{ r.video_showings }}{% endfor %}"/></div>
+                  <span></span>
+            </div>
+            <div class="form-group">
+              <div class="form-group mb-4"><label for="hours">Hours</label>
+                <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                      class="fas fa-user-check"></span></span>
+                       <input type="number" style="border-left:1px solid; padding-left:6px"
+                    placeholder="Hours" class="form-control" id="hours-edit-{% for r in report %}{{ r.id }}{% endfor %}" name="hours" required value="{% for r in report %}{{ r.hours }}{% endfor %}"/></div>
+                    <span>(Required)</span>
+                    <div class="edit_hour_err{% for r in report %}{{ r.id }}{% endfor %}"></div>
+              </div>
+            </div>
+              <div class="form-group">
+                  <div class="form-group mb-4"><label for="return-visit">Return Visits</label>
+                    <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                          class="fas fa-user-check"></span></span>
+                           <input type="number" style="border-left:1px solid; padding-left:6px"
+                        placeholder="Return Visits" class="form-control" id="return-visit-edit-{% for r in report %}{{ r.id }}{% endfor %}" name="return_visit" value="{% for r in report %}{% if r.return_visits == '0' %} {% else %}{{ r.return_visits }}{% endif %}{% endfor %}"/></div>
+                        <span></span>
+                  </div>
+              </div>
+                  <div class="form-group">
+                      <div class="form-group mb-4"><label for="bible-study">Bible Studies</label>
+                        <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                              class="fas fa-user-check"></span></span>
+                               <input type="number" style="border-left:1px solid; padding-left:6px"
+                            placeholder="Bible Studies" class="form-control" id="bible-study-edit-{% for r in report %}{{ r.id }}{% endfor %}" name="bible_study" value="{% for r in report %}{% if r.bible_studies == '0' %} {% else %}{{ r.bible_studies }}{% endif %}{% endfor %}"/></div>
+                            <span>(Bible Studies MUST not be greater than Return Visits)</span>
+                            <div class="edit_bs_err{% for r in report %}{{ r.id }}{% endfor %}"></div>
+                      </div>
+                  </div>
+                      <div class="form-group">
+                          <div class="form-group mb-4"><label for="Comments">Comments</label>
+                            <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                                  class="fas fa-user-check"></span></span>
+                                  <textarea placeholder="Comments" name="comments" id="comments-edit-{% for r in report %}{{ r.id }}{% endfor %}">{% for r in report %}{{ r.comments }}{% endfor %}</textarea>
+                              </div>
+                                <span></span>
+                          </div>
+                      </div>
+            <input type="submit" data-id="{% for r in report %}{{ r.id }}{% endfor %}" class="btn btn-block btn-primary submit-edit" value="Save" name="submit"/>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!--Modal Edit End-->

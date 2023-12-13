@@ -1,0 +1,333 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+ Waiting Room
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+
+ 
+  <main class="content">
+    {% include "main/includes/header.html" %} 
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+            <div class="d-block mb-4 mb-md-0">
+                <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+                    <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                        <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page">Waiting Room</li>
+                    </ol>
+                </nav>
+                <h2 class="h4">Waiting Room({% waiting_room_notifications %})</h2>
+                <p class="mb-0"></p>
+            </div>
+            <div class="btn-toolbar mb-2 mb-md-0">
+
+
+                <a href="/dashboard" class="btn btn-sm btn-secondary" style="margin-right:10px">Dashboard</a>
+
+            </div>
+        </div>
+
+
+
+
+
+        <div class="card card-body border-light shadow-sm table-wrapper table-responsive"
+            style="width:70%; margin:auto">
+
+            <table class="table user-table table-hover table-striped align-items-center" id="data">
+                <thead>
+                    <tr>
+                        <th class="border-bottom">
+                          #
+                        </th>
+                        <th class="border-bottom">Name</th>
+                        <th class="border-bottom">Status</th>
+                        <th class="border-bottom">View</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for pending_publisher in pending_publishers %}
+                    <tr>
+                        <td>
+                            {{ forloop.counter }}
+                            {% count_followers pending_publisher.username as number_of_followers %}
+                        </td>
+                        <td><a href="#" class="d-flex align-items-center"><img
+                                    src="{% static 'main/assets/img/team/profile-picture-1.jpg' %}"
+                                    class="user-avatar rounded-circle mr-3" alt="{{pending_publisher.first_name}} {{pending_publisher.last_name}}">
+                                <div class="d-block"><span class="font-weight-bold names{{pending_publisher.id}}">{{pending_publisher.first_name}} {{pending_publisher.last_name}} {{p}}</span>   
+                                </div>
+                            </a></td>
+                        <td><span class="font-weight-normal text-warning">{{pending_publisher.status}}</span> </td>
+                        <td><span class="font-weight-normal text-warning">
+                                <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                    data-target="#user_profile_Modal{{pending_publisher.user_id}}" id="user_profile" name="user_profile"
+                                    style="width: 100px;">
+                                    View Profile</button></span>
+                                    
+                                    {% if number_of_followers == 0 %}
+                                        <span class="delete" data-id='{{pending_publisher.user_id}}' style='cursor:pointer;'>
+                                          <button class="btn btn-danger btn-xs"><span class="fas fa-trash-alt"></span></button>
+                                        </span>
+                                    {% else %}
+                                      <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>
+                                        <span class="fas fa-trash-alt"></span>
+                                      </button>
+                                    {% endif %}    
+                        </td>
+                    </tr>
+                    <!--Modal Start-->
+                    <div class="modal fade" id="user_profile_Modal{{pending_publisher.user_id}}" tabindex="-1" role="dialog" aria-labelledby="add_data_Modal" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-0">
+                                    <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
+                                            aria-label="Close"></button>
+                                        <div class="card-header border-0 text-center pb-0">
+                                            <h2 class="mb-0 h5">{{pending_publisher.first_name}} {{pending_publisher.last_name}}</h2>
+                                        </div>
+                                        <div class="card-body">
+
+                                            <form method="post" action="/dashboard/waiting-room-approve" id="approval_form" class="approval_form">
+                                                {% csrf_token %}
+                                                <div class="form-group mb-4"><label for="firstname">First Name</label>
+                                                    <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                                                                class="fas fa-user-check"></span></span>
+                                                        <input type="text" class="form-control"
+                                                            style="border-left:1px solid; padding-left:6px" 
+                                                             value="{{pending_publisher.first_name}}" disabled /></div>
+                                                    <span></span>
+                                                </div>
+                                                <div class="form-group mb-4"><label for="email">Middle Name</label>
+                                                    <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                                                                class="fas fa-user-check"></span></span>
+                                                        <input type="text" class="form-control"
+                                                            style="border-left:1px solid; padding-left:6px"
+                                                           value="{{pending_publisher.middle_name}}"
+                                                            disabled /></div>
+                                                    <span></span>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="form-group mb-4"><label for="surname">Surname</label>
+                                                        <div class="input-group"><span class="input-group-text"
+                                                                id="basic-addon4"><span class="fas fa-user-check"></span></span>
+                                                            <input type="text" style="border-left:1px solid; padding-left:6px"
+                                                                class="form-control"  value="{{pending_publisher.last_name}}" disabled /></div>
+                                                        <span></span>
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <div class="form-group mb-4"><label for="surname">Gender</label>
+                                                            <div class="input-group"><span class="input-group-text"
+                                                                    id="basic-addon4"><span class="fas fa-user-check"></span></span>
+                                                                {% if pending_publisher.gender == "M" %}
+                                                                <input type="text" style="border-left:1px solid; padding-left:6px"
+                                                                    class="form-control" value="Male" disabled />
+                                                                {% else %}
+                                                                <input type="text" style="border-left:1px solid; padding-left:6px"
+                                                                    class="form-control" value="Female" disabled />
+                                                                {% endif %}        
+                                                            </div>
+                                                            <span></span>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <div class="form-group mb-4"><label for="surname">Username</label>
+                                                            <div class="input-group"><span class="input-group-text"
+                                                                    id="basic-addon4"><span class="fas fa-user-check"></span></span>
+                                                                <input type="text" style="border-left:1px solid; padding-left:6px"
+                                                                    placeholder="" class="form-control" value="{{pending_publisher.username}}" disabled /></div>
+                                                            <span></span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <div class="form-group mb-4"><label for="surname">Parent Id</label>
+                                                                <div class="input-group"><span class="input-group-text"
+                                                                        id="basic-addon4"><span
+                                                                            class="fas fa-user-check"></span></span>
+                                                                    {% if pending_publisher.username == pending_publisher.parent_id %}         
+                                                                    <input type="text"
+                                                                        style="border-left:1px solid; padding-left:6px"
+                                                                        placeholder="" class="form-control" value="Full Account" disabled />
+                                                                    {% else %}
+
+                                                                    {% for parent_name in parent_names %}
+                                                                    {% if parent_name.username == pending_publisher.parent_id %}
+                                                                    <input type="text"
+                                                                        style="border-left:1px solid; padding-left:6px"
+                                                                        placeholder="" class="form-control" value="{{parent_name.first_name}} {{parent_name.last_name}}"  disabled/>
+                                                                    {% endif %}    
+                                                                    {% endfor %}
+                                                                      
+                                                                    {% endif %}         
+                                                                </div>
+                                                                <span></span>
+                                                            </div>
+
+
+                                                            <div class="form-group mb-4"><label for="Phone">Phone Number</label>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text" id="basic-addon4">
+                                                                        <span class="fas fa-phone"></span>
+                                                                    </span>
+                                                                    <input type="text" class="form-control"
+                                                                         value="{{pending_publisher.phone}}"
+                                                                        disabled />
+                                                                </div>
+                                                                <span></span> <span></span>
+                                                            </div>
+                                                            <div class="form-group mb-4"><label for="Assign Group">Assign Group</label>
+                                                                <div class="input-group">
+                                                                        <span class="input-group-text" id="basic-addon3">
+                                                                            <span class="fas fa-calendar-alt"></span>
+                                                                        </span>
+                                                                    <select class="form-select mb-0 group" data-id='{{pending_publisher.user_id}}' name="group" aria-label="group" required>
+                                                                        <option value=""></option>
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="Non-Publisher">Non-Publisher</option>
+                                                                    </select>
+                                                                </div>
+                                                                <span>(Required)</span>
+                                                            </div>      
+                                                            <div id="appoint-appear{{pending_publisher.user_id}}">
+                                                                <div class="col-lg-3 col-sm-6 mt-4 mt-md-0">
+                                                                   <fieldset>
+                                                                     <legend class="h6">Appoint as</legend>
+                                                                     <div class="form-check"><input class="form-check-input" type="radio" name="appoint"
+                                                                         id="appoint" value="1"> <label class="form-check-label"
+                                                                         for="exampleRadios1">Elder</label></div>
+               
+                                                                     <div class="form-check"><input class="form-check-input" type="radio" name="appoint"
+                                                                         id="appoint" value="2"> <label class="form-check-label" for="exampleRadios2">Ministerial Servant</label></div>
+               
+                                                                         <div class="form-check"><input class="form-check-input" type="radio" name="appoint"
+                                                                         id="appoint" value="0"> <label class="form-check-label" for="exampleRadios3">None</label></div>
+                                                                     
+                                                                   </fieldset>
+                                                                </div>
+               
+                                                                 <div class="form-check mb-4">
+                                                                   <label class="form-check-label" for="pioneer">Regular Pioneer</label>
+                                                                   <input class="form-check-input" type="checkbox" value="1" id="pioneer" name="pioneer" /> 
+                                                                 </div>
+                                                            </div>
+                                                            <input type="hidden" name="unique_id" id="unique_id" value="{{pending_publisher.user_id}}"/>
+                                                            <button type="submit" id="approve" class="btn btn-block btn-primary"
+                                                            name="approve">Approve</button>                               
+                                            </form>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Modal End-->
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="footer section py-5">
+
+        </footer>
+
+    </main>
+    {% include "main/includes/js.html" %}
+
+
+    <script>
+     $(".group").each(function(){   
+        $(this).change(function() {  
+            var id = $(this).data('id');
+            if ($(this).val() == "Non-Publisher") {
+
+                $('#appoint-appear'+id).hide();
+
+                $('input[id="appoint"]:checked').prop("checked", false);
+                $('input[id="pioneer"]:checked').prop("checked", false);
+            }
+            else{
+                $('#appoint-appear'+id).show();         
+            }
+        });
+     });
+      $(".group").trigger("change");
+    </script>
+
+<script>
+    $(document).ready(function () {
+
+        // Delete 
+        $('#data').on('click', '.delete', function() {
+            var el = this;
+            
+
+            // Delete id
+            var deleteid = $(this).data('id');
+
+            var names = $(".names"+deleteid).text();
+          
+            $.confirm({
+                title: 'WARNING!',
+                content: 'Are you sure you want to remove <strong>'+ names +'</strong> from the waiting list?',
+                buttons: {
+                    Yes: {
+                        text: 'Yes',
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            // AJAX Request
+                            $.ajax({
+                                url: '{% url "waiting-room" %}',
+                                type: 'POST',
+                                data: {
+                                    id: deleteid,
+                                    tag: "delete",
+                                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                                },
+                               
+                                success: function (response) {
+
+                                    if (response == 1) {
+                                        // Remove row from Table
+                                        $(el).closest('tr').css('background', 'red');
+                                        $(el).closest('tr').fadeOut(800, function () {
+                                            $(this).remove();
+                                        });
+                                    } else {
+                                        alert('Invalid Selection.');
+                                    }
+
+                                }
+
+                            });
+                            setInterval('location.reload()', 1000);
+                        }
+                    },
+                    cancel: function () {
+
+                    }
+                }
+            });
+
+        });
+
+    });
+</script>
+  
+
+    {% endblock %} 

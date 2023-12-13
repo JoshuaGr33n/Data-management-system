@@ -1,0 +1,80 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+{{category}} Pending Reports:: {{month_year.month}} {{month_year.year}}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+
+
+
+
+<main class="content">
+  {% include "main/includes/header.html" %} 
+
+
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    <div class="d-block mb-4 mb-md-0">
+      <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+        <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}"><span class="fas fa-home"></span></a></li>
+          <li class="breadcrumb-item"><a href="{% url 'all-active-publishers' %}">All Publishers</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'choose-category' %}">Select Report Category</a></li>
+          <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER|escape}}">{{category}} Report</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Pending Reports</li>
+        </ol>
+      </nav>
+      <h2 class="h4">Pending Reports</h2>
+      <p class="mb-0"><strong>For {{month_year.month}} {{month_year.year}}</strong> ({{count_pending_reports}} {{pending_reports_tag}})</p>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+
+
+      <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-sm btn-secondary" style="margin-right:10px">Back</a>
+
+    </div>
+  </div>
+  <div class="card card-body border-light shadow-sm table-wrapper table-responsive" style="width:50%; margin:auto">
+
+    <table class="table user-table table-hover table-striped align-items-center" id="datatable">
+      <thead>
+        <tr>
+          <th class="border-bottom">
+            #
+          </th>
+          <th class="border-bottom">Name</th>
+          <th class="border-bottom">Number</th>
+          <th class="border-bottom">Group</th>
+          <th class="border-bottom" style="display:none"></th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for publisher in publishers %}
+        {% pending_report_query publisher.username month_year.id as report %}
+        {% if report == 0 %}
+        <tr>
+          <td>
+          </td>
+          <td><a href="#" class="d-flex align-items-center"><img src="{% static 'main/assets/img/blank.png' %}"
+                class="user-avatar rounded-circle mr-3" alt="{{publisher.first_name}} {{publisher.last_name}}">
+              <div class="d-block"><span class="font-weight-bold">{{publisher.first_name}} {{publisher.last_name}}</span>
+                <div class="small text-gray"></div>
+              </div>
+            </a></td>
+          <td><span class="font-weight-normal">{{publisher.phone}} </span></td>
+          <td><span class="font-weight-normal">{{publisher.groupName}}</span></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="footer section py-5">
+
+  </footer>
+</main>
+{% endblock %}

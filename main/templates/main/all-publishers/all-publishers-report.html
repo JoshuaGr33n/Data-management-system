@@ -1,0 +1,184 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+{{category}} Report:: {{month_year.month}} {{month_year.year}}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+<main class="content">
+  {% include "main/includes/header.html" %}
+
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    <div class="d-block mb-4 mb-md-0">
+      <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+        <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+          <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
+          <li class="breadcrumb-item"><a href="/publishers/all-active-publishers">All Publishers</a></li>
+          <li class="breadcrumb-item"><a href="/publishers/choose-category">Select Report Category</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Reports</li>
+        </ol>
+      </nav>
+      <h2 class="h4">{{category}} Report</h2>
+      <p class="mb-0"><strong>For {{month_year.month}} {{month_year.year}}</strong> ({{tag}}: {{count_publishers}} /
+        Reported: {{count_report}})</p>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <a href="{% url 'monthly-pending-reports' %}" class="btn btn-sm btn-danger" style="margin-right:10px"><span
+          class="fas fa-list mr-2"></span>Pending Reports</a>
+      <a href="/publishers/monthly-reports-stats" class="btn btn-sm btn-primary" style="margin-right:10px"><span
+          class="fas fa-book mr-2"></span>Report Statistics</a>
+      <a href="{% url 'export-import-monthly-reports' %}" class="btn btn-sm btn-success" style="margin-right:10px"><span
+          class="fas fa-list mr-2"></span>Import/Export to Excel</a>
+      <a href="/publishers/choose-category" class="btn btn-sm btn-secondary" style="margin-right:10px">Back</a>
+    </div>
+  </div>
+  <div class="card card-body border-light shadow-sm table-wrapper table-responsive">
+    <table class="table table-centered table-nowrap mb-0 rounded" id="datatable">
+      <thead class="thead-light">
+        <tr>
+          <th class="border-bottom">
+            #
+          </th>
+          <th class="border-bottom">Name</th>
+          <th class="border-bottom">Placements</th>
+          <th class="border-bottom">Video Showings</th>
+          <th class="border-bottom">Hours</th>
+          <th class="border-bottom">Return Vists</th>
+          <th class="border-bottom">Bible Studies</th>
+          <th class="border-bottom"></th>
+          <th class="border-bottom"></th>
+          <th class="border-bottom"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        {% publisher_report_name report.publisher_username as publisher_report_name %}
+        {% publisher_status_tag publisher_report_name.username as name_tag %}
+        <tr>
+          <td>
+            {{ forloop.counter }}
+          </td>
+          <td><a href="/publisher/profile" class="d-flex align-items-center"><img
+                src="{% static 'main/assets/img/blank.png' %}" class="user-avatar rounded-circle mr-3"
+                alt="{{publisher_report_name.first_name}} {{publisher_report_name.last_name}}">
+              <div class="d-block"><span class="font-weight-bold"> <span class="{{name_tag}}"></span>
+                  {{publisher_report_name.first_name}} {{publisher_report_name.last_name}}</span>
+              </div>
+            </a></td>
+          <td><span class="font-weight-normal">{{report.placements}} </span></td>
+          <td><span class="font-weight-normal">{{report.video_showings}}</span>
+          </td>
+          <td><span class="font-weight-normal">{{report.hours}}</span></td>
+          <td><span class="font-weight-normal">{{report.return_visits}}</span></td>
+          <td><span class="font-weight-normal">{{report.bible_studies}}</span>
+          </td>
+          <td>
+            <button data-toggle="modal" data-target="#comment_Modal{{report.id}}" class="btn btn-sm btn-primary"
+              style="margin-right:10px">Comment</button>
+          </td>
+          <td>
+            <span class="delete" data-id='{{report.id}}' style='cursor:pointer;'>
+              <button class="btn btn-danger btn-xs"><span class="fas fa-trash-alt"></span></button></span>
+          </td>
+          <td>
+            {% time_ago report.created_at %}
+          </td>
+        </tr>
+
+        <!--Modal Start-->
+        <div class="modal fade" id="comment_Modal{{report.id}}" tabindex="-1" role="dialog"
+          aria-labelledby="comment_Modal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-body p-0">
+                <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
+                    aria-label="Close"></button>
+                  <div class="card-header border-0 text-center pb-0">
+                    <h2 class="mb-0 h5">Publisher Comment</h2>
+                    <h5>{{publisher_report_name.first_name}} {{publisher_report_name.last_name}}</h5>
+                  </div>
+                  <div class="card-body">
+                    {% if report.comments  %}
+                    <p>{{report.comments}}</p>
+                    {% else %}
+                    <p>No comment added</p>
+                    {% endif %}
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Modal End-->
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="footer section py-5">
+
+  </footer>
+</main>
+{% include "main/includes/js.html" %}
+
+<script>
+  $(document).ready(function () {
+
+    // Delete 
+    $('#datatable').on('click', '.delete', function () {
+      var el = this;
+
+      // Delete id
+      var deleteid = $(this).data('id');
+
+      $.confirm({
+        title: 'WARNING!',
+        content: 'Are you sure you want to remove this report?' + deleteid,
+        buttons: {
+          Yes: {
+            text: 'Yes',
+            btnClass: 'btn-danger',
+            action: function () {
+              // AJAX Request
+              $.ajax({
+                url: '{% url "monthly-reports" %}',
+                type: 'POST',
+                data: {
+                  id: deleteid,
+                  tag: "delete",
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+
+                success: function (response) {
+
+                  if (response == 1) {
+                    // Remove row from Table
+                    $(el).closest('tr').css('background', 'red');
+                    $(el).closest('tr').fadeOut(800, function () {
+                      $(this).remove();
+                    });
+                  } else {
+                    alert('Invalid Selection.');
+                  }
+
+                }
+
+              });
+              setInterval('location.reload()', 1000);
+            }
+          },
+          cancel: function () {
+
+          }
+        }
+      });
+
+    });
+
+  });
+</script>
+
+{% endblock %}

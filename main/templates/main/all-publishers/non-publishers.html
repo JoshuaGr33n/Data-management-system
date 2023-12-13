@@ -1,0 +1,74 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+ Non Publishers
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+
+<main class="content">
+    {% include "main/includes/header.html" %} 
+
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+          <div class="d-block mb-4 mb-md-0">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+                <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                    <li class="breadcrumb-item"><a href="/dashboard/"><span class="fas fa-home"></span></a></li>
+            <li class="breadcrumb-item"><a href="all-active-publishers">All Active Publishers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Non Publishers</li>
+          </ol>
+        </nav>
+        <h2 class="h4">Publishers</h2>
+        <p class="mb-0">Non Publishers({{count_non_publishers}})</p>
+      </div>
+      <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="all-active-publishers" class="btn btn-sm btn-primary" style="margin-right:10px"><span
+            class="fas"></span>Back</a>
+      </div>
+    </div>
+   
+
+
+
+    
+    <div class="card card-body border-light shadow-sm table-wrapper table-responsive"  style="width: 60%;margin: auto;">
+      <table class="table user-table table-hover table-striped align-items-center" id="datatable">
+        <thead>
+          <tr>
+            <th class="border-bottom">
+                #
+            </th>
+            <th class="border-bottom">Name</th>
+            <th class="border-bottom">Gender</th>
+            <th class="border-bottom">Phone</th>
+            <th class="border-bottom" style="display:none;">Group</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for u_publisher in non_publishers %}
+            <tr>
+                <td>
+                    {{ forloop.counter }}
+                </td>
+                <td><a href="#" class="d-flex align-items-center">
+                    <div class="user-avatar bg-secondary mr-3"><span>N</span></div>
+                    <div class="d-block"><span class="font-weight-bold">{{u_publisher.first_name}} {{u_publisher.last_name}}</span>
+                      <div class="small text-gray">{{u_publisher.email}}</div>
+                    </div>
+                  </a></td>
+                <td><span class="font-weight-normal">{{u_publisher.gender}}</span></td>
+                <td><span class="font-weight-normal"><span class="fas  mr-2"></span>{{u_publisher.phone}}</span>
+                </td>
+            </tr>
+            {% endfor %} 
+        </tbody>
+      </table>
+    </div>
+    <footer class="footer section py-5">
+    
+    </footer>
+  </main>
+  {% endblock %} 

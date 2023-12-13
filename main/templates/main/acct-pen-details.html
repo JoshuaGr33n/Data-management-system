@@ -1,0 +1,371 @@
+{% extends 'main/base1.html' %}
+
+{% block title %}
+Edit Your Details
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<body>
+  <main>
+    <section class="d-flex align-items-center my-5 mt-lg-6 mb-lg-5" >
+      <div class="container">
+        <p class="text-center">
+        
+          </p>
+
+            <p class="text-center">
+              <a href="/sign-up-suc" class="text-gray-700"><i class="fas fa-angle-left mr-2"></i> Back</a>
+          </p>
+        
+
+
+        
+
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4" style=" height:100px">
+              
+              <div class="align-button">
+
+
+                <div class="col-lg-4">
+              
+              
+                          <button class="btn btn-primary text-white mr-2 dropdown-toggle" data-toggle="modal"
+                          data-target="#add_data_Modal" id="add" name="add">
+                          <span class="fas fa-unlock mr-2"></span>Change Password
+                          </button>
+
+
+                      <!--Modal Start-->
+                      <div class="modal fade" id="add_data_Modal" tabindex="-1" role="dialog"
+                          aria-labelledby="add_data_Modal" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-body p-0">
+                                      <div class="card p-4"><button type="button" class="btn-close ml-auto"
+                                              data-dismiss="modal" aria-label="Close"></button>
+                                          <div class="card-header border-0 text-center pb-0">
+                                              <h2 class="mb-0 h5">Change Password</h2>
+                                          </div>
+                                          <div class="card-body">
+
+
+                                              <form method="post" id="acct_pen_change_password" action="/update-acct-pending-details/">
+                                                  {% csrf_token %}
+                                                  <div class="form-group mb-4"><label for="password1">New Password</label>
+                                                      <div class="input-group"><span class="input-group-text"
+                                                              id="basic-addon3"></span>
+                                                        <input class="form-control" id="password1" name="password1" type="password" value="" required/>
+                                                      </div>
+                                                      <span></span>
+                                                  </div>
+                                                  <div class="form-group mb-4"><label for="password2">Retype New Password</label>
+                                                      <div class="input-group"><span class="input-group-text"
+                                                              id="basic-addon3"></span>
+                                                            <input class="form-control" id="password2" name="password2" type="password" value="" required>
+                                                      </div>
+                                                      <span></span>
+                                                  </div>
+                                                
+                                                  <input type="hidden" name="userID" value="{{publisher.publisherprofile.user_id}}"/>
+                                                  <input type="submit" id="button" class="btn btn-block btn-primary"
+                                                      value="Save" name="acct_pen_change_password_button" />
+                                              </form>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!--Modal End-->
+            
+
+
+
+                </div>
+
+
+              </div>
+
+        
+            </div>
+      <div class="card card-body bg-white border-light shadow-sm mb-4">
+    <h2 class="h5 mb-4">My Account Details</h2>
+
+
+    <form method="post" id="update_pen_details" action="/update-acct-pending-details/">
+      {% csrf_token %}
+      <div class="row"><div class="col-md-6 mb-3">
+        <div>
+          <label for="first_name">First Name</label> 
+          <input class="form-control" id="fname" name="fname" type="text" value="{{publisher.publisherprofile.first_name}}" placeholder="First Name" required/></div>
+        </div>
+        <div class="col-md-6 mb-3"><div>
+          <label for="last_name">Middle Name</label> 
+          <input class="form-control" id="mname" name="mname" type="text" value="{{publisher.publisherprofile.middle_name}}" placeholder="Middle Name"/></div>
+        </div>
+      </div>
+      <div class="row align-items-center">
+        <div class="col-md-6 mb-3">
+          <label for="birthday">Surname</label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <span></span>
+            </span> 
+            <input  class="form-control" id="surname" name="surname" type="text" value="{{publisher.publisherprofile.last_name}}" placeholder="Surname" required/></div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="gender">Gender</label>
+            <select class="form-select mb-0" id="gender" name="gender" aria-label="Gender select example">
+              {% if publisher.publisherprofile.gender == "M" %}
+                  <option value="{{publisher.publisherprofile.gender}}">Male</option>
+              {% else %}
+                  <option value="{{publisher.publisherprofile.gender}}">Female</option>
+              {% endif %} 
+              <option value="F">Female</option>
+              <option value="M">Male</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input class="form-control" id="email" name="email" type="email" value="{{publisher.publisherprofile.email}}" placeholder="name@company.com" />
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="form-group">
+                  <label for="phone">Username</label> 
+                  <input class="form-control"  type="text" placeholder="Username"  disabled value="{{publisher.publisherprofile.username}}"/>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="form-group">
+                <label for="email">Phone</label>
+                <input class="form-control" id="phone" name="phone" type="tel" value="{{publisher.publisherprofile.phone}}" placeholder="+12-345 678 910" required/>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="form-group">
+                  <label for="phone">Confirm Phone</label> 
+                  <input class="form-control" id="phone2" name="phone2" type="tel" value="{{publisher.publisherprofile.phone}}" placeholder="+12-345 678 910" required/>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+                        <input type="hidden" name="userID" value="{{publisher.publisherprofile.user_id}}"/>
+                        <div class="mt-3">
+                        <input type="submit" class="btn btn-block btn-primary" name="update_pen_details_submitButton" id="save-button" value="Save All" />
+                        </div>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+              </section>
+            </main>
+</body>            
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    //add new secondary user phone check
+
+    $('document').ready(function(){
+    var phone_state = true;
+   
+    $('#phone').on('blur', function(){
+     var phone = $('#phone').val();
+    //  var parent_username = $('#parent_username').val();
+    
+     $.ajax({
+       url: '{% url "check-follower-phone-exist" %}',
+       type: 'post',
+       data: {
+           'phone_check' : 1,
+           'phone' : phone,
+          //  'parent_username' : parent_username,
+           csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+       },
+       success: function(response){
+         if (response == 'taken' ) {
+             phone_state = false;
+             $('#phone').parent().removeClass();
+             $('#phone').parent().addClass("form_error");
+             $('#phone').siblings("span").text('Sorry...Phone already taken');
+             $('#phone').focus();
+             $('#save-button').prop('disabled', true);
+             $('#phone').siblings("span").show();
+         }else if (response == 'not_taken') {
+             phone_state = true;
+             $('#phone').parent().removeClass();
+             $('#phone').parent().addClass("form_success");
+             $('#phone').siblings("span").text('Phone available');
+             $('#save-button').prop('disabled', false);
+             $('#phone').siblings("span").show();
+         }else if (response == 'not_number') {
+             phone_state = false;
+             $('#phone').parent().removeClass();
+             $('#phone').parent().addClass("form_error");
+             $('#phone').siblings("span").text('Only digits allowed');
+             $('#phone').focus();
+             $('#phone').siblings("span").show();
+             $('#save-button').prop('disabled', true);
+         }else {
+             phone_state = false;
+             $('#phone').siblings("span").hide();
+             $('#save-button').prop('disabled', false);
+         }
+       }
+     });
+    });		
+     
+   });
+
+ //add new secondary user phone check
+</script>
+
+
+
+<style>
+    .error{
+    color: red;
+    }
+    label
+    /* input, */ {
+    border: 0;
+    margin-bottom: 3px;
+    display: block;
+    width: 100%;
+    }
+
+    .common_box_body {
+    padding: 15px;
+    border: 12px solid #28BAA2;
+    border-color: #28BAA2;
+    border-radius: 15px;
+    margin-top: 10px;
+    background: #d4edda;
+    }
+
+    .form_error span {
+    width: 80%;
+    height: 35px;
+    margin: 3px 10%;
+    font-size: 1.1em;
+    color: #D83D5A;
+    }
+    .form_error input {
+    border: 1px solid #D83D5A;
+    }
+
+    /*Styling in case no errors on form*/
+    .form_success span {
+    width: 80%;
+    height: 35px;
+    margin: 3px 10%;
+    font-size: 1.1em;
+    color: green;
+    }
+    .form_success input {
+    border: 1px solid green;
+    }
+</style>
+<script src="{% static 'main/external/js/jquery.validate.min.js' %}"></script>
+<script>
+  $(document).ready(function () {
+    $('#update_pen_details').validate({
+    
+      rules: {
+        fname: {
+          required: true
+        },
+
+        surname: {
+          required: true
+        },
+
+        gender: {
+          required: true
+        },
+
+        email: {
+          required: false,
+          email: true
+        },
+
+        phone: {
+          required: true,
+          rangelength: [11, 11],
+          number: true
+        },
+
+
+        phone2: {
+          required: true,
+          rangelength: [11, 11],
+          number: true,
+          equalTo: "#phone"
+        }
+       
+      },
+      messages: {
+        fname: 'Please enter Name.',
+        surname: 'Please enter your Last Name.',
+        gender: 'Please select your Gender.',
+       
+        email: {
+          // required: 'Please enter Email Address.',
+          email: 'Please enter a valid Email Address.',
+        },
+        phone: {
+          required: 'Please enter your phone number.',
+          rangelength: 'Contact should be 11 digit number.'
+        },
+        phone2: {
+          required: 'Please enter Confirm Phone.',
+          equalTo: 'Confirm Phone do not match with Password.',
+        }
+      },
+      submitHandler: function (form) {
+        form.submit();
+      }
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('#acct_pen_change_password').validate({
+    
+      rules: {
+        
+        password1: {
+          required: true,
+          minlength: 6
+        },
+        password2: {
+          required: true,
+          equalTo: "#password1"
+        }
+
+       
+      },
+      messages: {
+        password1: {
+          required: 'Please enter Password.',
+          minlength: 'Password must be at least 6 characters long.',
+        },
+        password2: {
+          required: 'Please enter Confirm Password.',
+          equalTo: 'Confirm Password do not match with Password.',
+        }
+      },
+      submitHandler: function (form) {
+        form.submit();
+      }
+    });
+  });
+</script>
+{% endblock %}

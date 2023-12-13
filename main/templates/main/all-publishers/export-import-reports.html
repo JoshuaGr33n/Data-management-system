@@ -1,0 +1,193 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+{{category}} Report:: {{month_year.month}} {{month_year.year}}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+<main class="content">
+    {% include "main/includes/header.html" %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+        <div class="d-block mb-4 mb-md-0">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+                <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}"><span class="fas fa-home"></span></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="{% url 'all-active-publishers' %}">All Publishers</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'choose-category' %}">Select Report Category</a></li>
+                    <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER|escape}}">{{category}} Report</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Import/Export Report</li>
+                </ol>
+            </nav>
+            <h2 class="h4">Import/Export Reports</h2>
+            <p class="mb-0"><strong>For {{month_year.month}} {{month_year.year}}</strong> </p>
+        </div>
+        <div class="btn-toolbar mb-2 mb-md-0">
+
+
+
+            <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-sm btn-secondary"
+                style="margin-right:10px">Back</a>
+        </div>
+    </div>
+
+
+    <div class="col-12 col-lg-6" style="margin:auto;">
+        <div class="card border-light shadow-sm">
+            <div class="card-header d-flex align-items-center border-bottom border-light">
+                <h3 class="h5 mb-0"></h3>
+                <div class="ml-auto">
+
+
+                </div>
+            </div>
+            <div class="card-body">
+
+
+                <div class="form-group mb-4" style="margin-left:20%"><label for="Export">Export Reports for this
+                        Month to Excel</label>
+                    <div class="input-group" style="margin-left:20%">
+                        <span class="input-group-text" id="basic-addon3">
+                            <span class="fas fa-list"></span>
+                        </span>
+                        <button type="submit" class="btn btn-sm btn-success" name="export" data-title="Export"
+                            data-toggle="modal" data-target="#export_modal"><span class=""></span>Export</button>
+                    </div>
+                    <span></span>
+                </div>
+
+                <div style="height:20px;"></div>
+
+
+                <div class="form-group mb-4" style="margin-left:15%"><label for="Import">Import from Excel</label>
+                    <form action="{% url 'import-excel' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon3">
+                                <span class="fas fa-list-alt"></span>
+                            </span>
+
+                            <input type="file" class="btn btn-sm btn-primary" name="excel_file" accept=".csv, .xls, .xlsx" /> <input
+                                type="submit" name="import_submit" class="btn btn-sm btn-success"
+                                style="margin-right:10px" value="Import" />
+
+                        </div>
+                        <span></span>
+                    </form>
+
+                </div>
+
+
+                <div style="height:50px;"> </div>
+
+                <button type="button" class="btn btn-sm btn-danger deleteALL" style="margin-left:30%"><span
+                        class="fas fa-trash mr-2"></span>Clear
+                    {{category}} report for
+                    {{month_year.month}} {{month_year.year}}
+                </button>
+
+
+                <!-- export modal -->
+                <div class="modal fade" id="export_modal" tabindex="-1" role="dialog" aria-labelledby="edit"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+
+                            </div>
+                            <div class="modal-body">
+
+                                <a href="{% url 'export_monthly_report_csv' %}" class="btn btn-sm btn-success"
+                                    style="margin-left: 150px;">Export to CSV</a><br>
+                                <a href="{% url 'export_monthly_report_xls' %}" class="btn btn-sm btn-success"
+                                    style="margin-left: 150px; margin-top: 10px;">Export to XLS</a>
+
+                            </div>
+                            <div class="modal-footer ">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- export modal -->
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="footer section py-5">
+     {% for test in tests %}
+       {{test.pioneer}}
+     {% endfor %}
+
+        </footer>
+</main>
+
+{% include "main/includes/js.html" %}
+
+
+<script>
+  $(document).ready(function () {
+
+      // Delete 
+      $('.content').on('click', '.deleteALL', function() {
+          var el = this;
+          
+
+          // Delete id
+        //   var deleteid = $(this).data('id');
+
+          $.confirm({
+              title: 'WARNING!',
+              content: 'Are you sure you want to remove this report?',
+              buttons: {
+                  Yes: {
+                      text: 'Yes',
+                      btnClass: 'btn-danger',
+                      action: function () {
+                          // AJAX Request
+                          $.ajax({
+                              url: '{% url "delete-reports" %}',      
+                              type: 'POST',
+                              data: {
+                                //   id: deleteid,
+                                //   tag: "delete",
+                                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                              },
+
+                              success: function (response) {
+
+                                  if (response == 1) {
+                                      // Remove row from Table
+                                      $(el).closest('tr').css('background', 'red');
+                                      $(el).closest('tr').fadeOut(800, function () {
+                                          $(this).remove();
+                                      });
+                                  } else {
+                                      alert('Invalid Selection.');
+                                  }
+
+                              }
+
+                          });
+                          setInterval('location.reload()', 1000);
+                      }
+                  },
+                  cancel: function () {
+
+                  }
+              }
+          });
+
+      });
+
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+ Dashboard
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+ 
+  <main class="content">
+    {% include "main/includes/header.html" %} 
+       
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+      <div class="btn-toolbar dropdown">
+        <a href="/submit-report/select-month-year" class="btn btn-primary btn-sm mr-2"
+          ><span class="fas fa-plus mr-2"></span>Submit Report</a>
+        
+      </div>
+      {% if publisher.publisherprofile.privilege == "1" %}
+       <a href="/dashboard/month-year" class="btn btn-sm btn-secondary" style="margin-right:10px">Month/Year</a>
+      {% endif %} 
+    </div>
+    <div class="row justify-content-md-center">
+      
+
+
+      
+      <div class="col-12 col-sm-6 col-xl-4 mb-4">
+        <div class="card border-light shadow-sm">
+          <div class="card-body">
+            <div class="row d-block d-xl-flex align-items-center">
+              <div
+                class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                <div class="icon icon-shape icon-md icon-shape-blue rounded mr-4 mr-sm-0"><span
+                    class="fas fa-user"></span></div>
+                <div class="d-sm-none">
+                  <h2 class="h5">Active Publishers</h2>
+                  <h3 class="mb-1">150</h3>
+                </div>
+              </div>
+              <div class="col-12 col-xl-7 px-xl-0">
+                <div class="d-none d-sm-block">
+                  <h2 class="h5">Active Publishers</h2>
+                  <h3 class="mb-1">150</h3>
+                </div><small>Feb 1 - Apr 1, <span class="icon icon-small"><span
+                      class="fas fa-globe-europe"></span></span> WorldWide</small>
+                <div class="small mt-2"><span class="fas fa-angle-up text-success"></span> <span
+                    class="text-success font-weight-bold">18.2%</span> Since last month</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-4 mb-4">
+        <div class="card border-light shadow-sm">
+          <div class="card-body">
+            <div class="row d-block d-xl-flex align-items-center">
+              <div
+                class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                <div class="icon icon-shape icon-md icon-shape-secondary rounded mr-4"><span
+                    class="fas fa-cash-register"></span></div>
+                <div class="d-sm-none">
+                  <h2 class="h5">Total Hours</h2>
+                  <h3 class="mb-1">43,594</h3>
+                </div>
+              </div>
+              <div class="col-12 col-xl-7 px-xl-0">
+                <div class="d-none d-sm-block">
+                  <h2 class="h5">Total Hours</h2>
+                  <h3 class="mb-1">43,594</h3>
+                </div><small>Feb 1 - Apr 1, <span class="icon icon-small"><span
+                      class="fas fa-globe-europe"></span></span> Worldwide</small>
+                <div class="small mt-2"><span class="fas fa-angle-up text-success"></span> <span
+                    class="text-success font-weight-bold">28.2%</span> Since last month</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-4 mb-4">
+        <div class="card border-light shadow-sm">
+          <div class="card-body">
+            <div class="row d-block d-xl-flex align-items-center">
+
+              <div class="icon icon-shape icon-md icon-shape-success rounded mr-4 mr-sm-0"><span
+                class="fas fa-user-check"></span></div>
+
+              <div class="col-12 col-xl-7 px-xl-0">
+                <h2 class="h5 mb-3">Appointed Servants</h2>
+                <h6 class="font-weight-normal text-gray"><span class="icon w-20 icon-xs icon-secondary mr-1"><span
+                      class="fas fa-user"></span></span> Elders <a href="#" class="h6">15</a></h6>
+                <h6 class="font-weight-normal text-gray"><span class="icon w-20 icon-xs icon-primary mr-1"><span
+                      class="fas fa-user"></span></span> Ministerial Servants <a href="#" class="h6">20</a></h6>
+                <h6 class="font-weight-normal text-gray"><span class="icon w-20 icon-xs icon-tertiary mr-1"><span
+                      class="fas fa-user"></span></span> Pioneers <a href="#" class="h6">35</a></h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <footer class="footer section py-5">
+     
+    </footer>
+  </main>
+  
+
+{% endblock %}

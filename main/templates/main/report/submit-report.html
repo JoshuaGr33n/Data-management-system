@@ -1,0 +1,525 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+ Submit Report
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+  <main class="content">
+       {% include "main/includes/header.html" %} 
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+          <div class="d-block mb-4 mb-md-0">
+        <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+          <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                    <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
+           
+            <li class="breadcrumb-item"><a href="/submit-report/select-month-year">Select Month & Year</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Submit Report</li>
+          </ol>
+        </nav>
+        <h2 class="h4">Submit Report</h2>
+        <p class="mb-0">For {{month_year.month}} {{month_year.year}} {{month_year.open}}</p>
+      </div>
+      {% if month_year.open == True %}
+      <div class="btn-toolbar mb-2 mb-md-0"><button class="btn btn-sm btn-primary" data-toggle="modal"
+        data-target="#add_data_Modal"><span
+            class="fas fa-plus mr-2"></span> Add Report</button>
+      {% endif %}      
+              <!--Modal Start-->
+              <div class="modal fade" id="add_data_Modal" tabindex="-1" role="dialog"
+              aria-labelledby="add_data_Modal" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-body p-0">
+                    <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
+                        aria-label="Close"></button>
+                      <div class="card-header border-0 text-center pb-0">
+                        <h2 class="mb-0 h5">Submit Report</h2>
+                      </div>
+                      <div class="card-body">
+                        <form method="post" id="submit_report_form_out">
+                          {% csrf_token %}
+                            <div class="form-group mb-4"><label for="Select Publisher">Select Publisher</label>
+                                <div class="input-group">
+                                      <span class="input-group-text" id="basic-addon3">
+                                           <span class="fas fa-user-check"></span>
+                                        </span>
+                              <select class="form-select mb-0" id="select-publisher-add-out" name="select_publisher" aria-label="select-publisher" required>
+                                      {% for my_publisher in my_publishers_add_form %}
+                                        {% check_my_publishers my_publisher.username month_year.id as check_publisher_name %}
+                                          {% if check_publisher_name == 0 %}
+                                            <option value="{{my_publisher.username}}">{{my_publisher.first_name}} {{my_publisher.last_name}}</option>
+                                          {% endif %}  
+                                      {% endfor %}
+                               </select>           
+                            </div>
+                               <span>(Required)</span>
+                            </div>
+                          <div class="form-group mb-4"><label for="placements">Placements</label>
+                            <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                                  class="fas fa-user-check"></span></span> 
+                                  <input type="number" class="form-control" style="border-left:1px solid; padding-left:6px"
+                                placeholder="Placements" id="placements-add-out" name="placements"  /></div>
+                                <span></span>
+                          </div>
+                          <div class="form-group mb-4"><label for="video">Video Showings</label>
+                            <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
+                                  class="fas fa-user-check"></span></span> 
+                                  <input type="number" class="form-control" style="border-left:1px solid; padding-left:6px"
+                                placeholder="Video Showings" id="video-add-out" name="video" /></div>
+                                <span></span>
+                          </div>
+                          <div class="form-group">
+                            <div class="form-group mb-4"><label for="hours">Hours</label>
+                              <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                                    class="fas fa-user-check"></span></span>
+                                     <input type="number" style="border-left:1px solid; padding-left:6px"
+                                  placeholder="Hours" class="form-control" id="hours-add-out" name="hours" required /></div>
+                                  <span>(Required)</span>
+                                  <div class="hour-err-add-out"></div>
+                            </div>
+                         </div>
+
+                            <div class="form-group">
+                                <div class="form-group mb-4"><label for="return-visit">Return Visits</label>
+                                  <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                                        class="fas fa-user-check"></span></span>
+                                         <input type="number" style="border-left:1px solid; padding-left:6px"
+                                      placeholder="Return Visits" class="form-control" id="return-visit-add-out" name="return_visit" /></div>
+                                      <span></span>
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    <div class="form-group mb-4"><label for="bible-study">Bible Studies</label>
+                                      <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                                            class="fas fa-user-check"></span></span>
+                                             <input type="number" style="border-left:1px solid; padding-left:6px"
+                                          placeholder="Bible Studies" class="form-control" id="bible-study-add-out" name="bible_study"/></div>
+                                          <span>(Bible Studies MUST not be greater than Return Visits)</span>
+                                          <div class="bible-study-add-out"></div>
+                                    </div>
+                                </div>
+                                    <div class="form-group">
+                                        <div class="form-group mb-4"><label for="surname">Comments</label>
+                                          <div class="input-group"><span class="input-group-text" id="basic-addon4"><span
+                                                class="fas fa-user-check"></span></span>
+                                                <textarea placeholder="Comments" name="comments" id="comments-add-out"></textarea>
+                                            </div>
+                                              <span></span>
+                                        </div>
+                                    </div>
+                          <input type="hidden" name="month-year-id-add-out" value="{{month_year.id}}">
+                          <input type="submit" id ="submit-add-out" class="btn btn-block btn-primary" value="Submit" name="submit"/>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Modal End-->
+        <div class="btn-group ml-3"><a href="/submit-report/select-month-year" class="btn btn-sm btn-secondary" style="margin-right:10px">Back</a></div>
+      </div>
+    </div>
+
+    <div class="card card-body border-light shadow-sm table-wrapper table-responsive">
+      
+        <table class="table table-centered table-striped table-nowrap mb-0 rounded" id="datatable">
+          <thead class="thead-light">
+            <tr>
+              <th class="border-bottom">
+                #
+               </th>
+              <th class="border-bottom">Name</th>
+              <th class="border-bottom">Placements</th>
+              <th class="border-bottom">Video Showings</th>
+              <th class="border-bottom">Hours</th>
+              <th class="border-bottom">Return Vists</th>
+              <th class="border-bottom">Bible Studies</th>
+              <th class="border-bottom">View</th>
+              <th class="border-bottom">Action</th>
+              <th class="border-bottom">Posted</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for my_publisher in my_publishers %}
+              {% submit_report_get_publisher_report my_publisher.username month_year.id as report %}
+              {% check_my_publishers my_publisher.username month_year.id as check_publisher_name %}
+              <tr>
+                <td>
+                  {{ forloop.counter }}
+                </td>
+                <td><a href="#" class="d-flex align-items-center"><div class="user-avatar bg-secondary mr-3"><span>N</span></div>
+                    <div class="d-block"><span class="font-weight-bold">{{ my_publisher.first_name }} {{ my_publisher.last_name }}</span>
+                    </div>
+                  </a></td>
+                <td><span class="font-weight-normal">{% for r in report %}{{ r.placements }}{% endfor %}</span></td>
+                <td><span class="font-weight-normal">{% for r in report %}{{ r.video_showings }}{% endfor %}</span></td>
+                <td><span class="font-weight-normal">{% for r in report %}{{ r.hours }}{% endfor %}</span></td>
+                <td><span class="font-weight-normal">{% for r in report %}{% if r.return_visits == "0" %}--{% else %}{{ r.return_visits }}{% endif %}{% endfor %}</span></td>
+                <td><span class="font-weight-normal">{% for r in report %}{% if r.bible_studies == "0" %}--{% else %}{{ r.bible_studies }}{% endif %} {% endfor %}</span></td>   
+                <td>
+                  {% if month_year.open == True %}
+                    {% if my_publisher.status == "Active" %}
+                      {% if my_publisher.groupName == "Non-Publisher" %}
+                        <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>Not Yet a Publisher</button>
+                      {% else %}
+                        {% if check_publisher_name > 0 %}
+                            <button class="btn btn-sm btn-secondary" data-toggle="modal"
+                            data-target="#view_data_Modal{{ my_publisher.id }}"><span class="fas fa-eye mr-2"></span>View Report</button>
+                        {% else %}
+                            <button class="btn btn-sm btn-primary" data-toggle="modal"
+                            data-target="#add_inline_Modal{{ my_publisher.id }}"><span class="fas fa-plus mr-2"></span>Add Report</button>
+                        {% endif %}
+                      {% endif %}
+                    {% elif my_publisher.status == "Pending" %}
+                      <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>Pending Approval</button>
+                    {% else %}
+                        <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>Account Deactivated</button>
+                    {% endif %}
+                  {% else %} 
+                     <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>Report Closed</button>
+                  {% endif %}   
+                </td>      
+                <td>
+                  {% if month_year.open == True %}
+                    {% if my_publisher.status == "Active" %}
+                        {% if my_publisher.groupName == "Non-Publisher" %}
+                          <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>Not Yet a Publisher</button>
+                        {% else %}
+                            {% if check_publisher_name > 0 %}
+                                <button class="btn btn-primary btn-xs" data-toggle="modal" type="button" data-target="#edit_data_Modal{{my_publisher.id}}"><span class="fas fa-pen"></span></button>
+                                <span class="delete" data-id='{{my_publisher.username}}' style='cursor:pointer;'>
+                                <button class="btn btn-danger btn-xs"><span class="fas fa-trash-alt"></span></button></span>
+                            {% else %}
+                                <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled><span class="fas fa-pen"></span></button>
+                                <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>
+                                <span class="fas fa-trash-alt"></span></button>
+                            {% endif %}  
+                        {% endif %}
+                      {% elif my_publisher.status == "Pending" %}
+                          <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>Pending Approval</button>
+                      {% else %}
+                          <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>Account Deactivated</button>
+                      {% endif %}
+                  {% else %} 
+                      <button class="btn btn-light btn-xs" style="border:solid #999 1px" disabled>Report Closed</button>
+                  {% endif %}                                  
+                </td>
+                <td><span class="font-weight-normal">{% for r in report %}{% time_ago  r.created_at %}{% endfor %}</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+<div>
+  {% for tes in reports %}
+  {{ tes.hours }}
+  {% endfor %}
+</div>
+<div id="each">
+    {% for my_publisher in my_publishers %}
+       {% include "main/report/submit-report-modals.html" %}
+    {% endfor %}
+</div>    
+    <footer class="footer section py-5">
+     
+    </footer>
+  </main>
+  {% include "main/includes/js.html" %}
+
+
+  <script>
+    $(document).ready(function () {
+
+        // Delete 
+        $('#datatable').on('click', '.delete', function() {
+            var el = this;
+            
+
+            // Delete id
+            var deleteid = $(this).data('id');
+
+            $.confirm({
+                title: 'WARNING!',
+                content: 'Are you sure you want to remove this report?',
+                buttons: {
+                    Yes: {
+                        text: 'Yes',
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            // AJAX Request
+                            $.ajax({
+                                url: '{% url "submit-report-post" %}',      
+                                type: 'POST',
+                                data: {
+                                    id: deleteid,
+                                    tag: "delete",
+                                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                                },
+
+                                success: function (response) {
+
+                                    if (response == 1) {
+                                        // Remove row from Table
+                                        $(el).closest('tr').css('background', 'red');
+                                        $(el).closest('tr').fadeOut(800, function () {
+                                            $(this).remove();
+                                        });
+                                    } else {
+                                        alert('Invalid Selection.');
+                                    }
+
+                                }
+
+                            });
+                            setInterval('location.reload()', 1000);
+                        }
+                    },
+                    cancel: function () {
+
+                    }
+                }
+            });
+
+        });
+
+    });
+  </script>
+
+
+
+
+
+
+  <script>
+    $(document).ready(function() {
+       var delay = 2000;
+       $('#submit-add-out').click(function(e){
+       e.preventDefault();
+    
+       var select_publisher = $('#select-publisher-add-out').val();
+       var placements = $('#placements-add-out').val();
+       var hours = $('#hours-add-out').val();
+       var video = $('#video-add-out').val();
+       var bible_study = parseInt($('#bible-study-add-out').val());
+       var return_visit = parseInt($('#return-visit-add-out').val());
+       var comments = $('#comments-add-out').val();
+       
+       if (isNaN(return_visit) == true){
+           return_visit = 0;
+       }
+       if (isNaN(bible_study) == true){
+          bible_study = 0;
+       }
+       if(hours == ''){
+       $('.hour-err-add-out').html(
+       '<span style="color:red;">Hours is required</span>'
+       );
+       $('#hours-add-out').focus();
+       return false;
+       }else{
+        $('.hour-err-add-out').hide();
+       }
+     
+       if(bible_study > return_visit){
+       $('.bible-study-add-out').html(
+       '<span style="color:red;">Bible Studies MUST not be greater than Return Visits</span>'
+       );
+       $('#return-visit-add-out').focus();
+          return false;
+       }else{
+        $('.bible-study-add-out').hide();
+       } 
+     
+       $.ajax
+       ({
+       type: "POST",
+       url: "{% url 'submit-report-post' %}",
+       data: {
+           'add_report' : 1,
+           'hours' : hours,
+           'select_publisher' : select_publisher,
+           'return_visit' : return_visit,
+           'bible_study' : bible_study,
+           'placements' : placements,
+           'video' : video,
+           'comments' : comments,
+           csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+
+       },
+       beforeSend: function() {
+       $('.hour-err-add-out').html(
+       '<img src="Loader.gif" width="90" height="90"/>'
+       );
+       }, 
+       success: function(data)
+       {
+       setTimeout(function() {
+       $('.hour-err-add-out').html(data);
+       }, delay);
+       }
+       });
+       setInterval('location.reload()', 2000);
+       });
+     
+    });
+    </script>
+
+<script>
+  //  add inline report
+ $(document).ready(function() {
+    var delay = 2000;
+   //  $('.submit-edit').click(function(e){
+     $('#each').on('click', '.submit-add-inline', function(e) {
+       e.preventDefault();
+
+       var publisher_id = $(this).data('id');
+       var publisher_username = $('#publisher_username'+publisher_id).val();
+       var placements_add_inline = $('#placements'+publisher_id).val();
+       var hours_add_inline = $('#hours'+publisher_id).val();
+       var video_add_inline = $('#video'+publisher_id).val();
+       var bible_study_add_inline = parseInt($('#bible_study'+publisher_id).val());
+       var return_visit_add_inline = parseInt($('#return_visit'+publisher_id).val());
+       var comments_add_inline = $('#comments'+publisher_id).val();
+       
+       if (isNaN(return_visit_add_inline) == true){
+         return_visit_add_inline = 0;
+       }
+       if (isNaN(bible_study_add_inline) == true){
+         bible_study_add_inline = 0;
+       }
+       if(hours_add_inline == ''){
+       $('.add_inline_hour_err'+publisher_id).html(
+       '<span style="color:red;">Hours is required</span>'
+       );
+       $(hours_add_inline).focus();
+       return false;
+       }else{
+         $('.add_inline_hour_err'+publisher_id).hide();
+       }
+     
+       if(bible_study_add_inline > return_visit_add_inline){
+       $('.add_inline_bs_err'+publisher_id).html(
+       '<span style="color:red;">Bible Studies MUST not be greater than Return Visits</span>'
+       );
+       $(return_visit_add_inline).focus();
+           return false;
+       }else{
+         $('.add_inline_bs_err'+publisher_id).hide();
+       } 
+     
+       $.ajax
+       ({
+       type: "POST",
+       url: "{% url 'submit-report-post' %}",
+       data: {
+           'add_report' : 1,
+           'select_publisher' : publisher_username,
+           'hours' : hours_add_inline,
+           'return_visit' : return_visit_add_inline,
+           'bible_study' : bible_study_add_inline,
+           'placements' : placements_add_inline,
+           'video' : video_add_inline,
+           'comments' : comments_add_inline,
+           csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+       },
+       beforeSend: function() {
+       $('.add_inline_hour_err'+publisher_id).html(
+       '<img src="Loader.gif" width="90" height="90"/>'
+       );
+       }, 
+       success: function(data)
+       {
+       setTimeout(function() {
+       $('.add_inline_hour_err'+publisher_id).html(data);
+       }, delay);
+       }
+       });
+       setInterval('location.reload()', 1000);
+     });
+  
+ });
+ //  add inline report
+</script>
+
+
+
+
+
+<script>
+  $(document).ready(function() {
+     var delay = 2000;
+    //  $('.submit-edit').click(function(e){
+      $('#each').on('click', '.submit-edit', function(e) {
+        e.preventDefault();
+
+        var report_id = $(this).data('id');
+        var placements_edit = $('#placements-edit-'+report_id).val();
+        var hours_edit = $('#hours-edit-'+report_id).val();
+        var video_edit = $('#video-edit-'+report_id).val();
+        var bible_study_edit = parseInt($('#bible-study-edit-'+report_id).val());
+        var return_visit_edit = parseInt($('#return-visit-edit-'+report_id).val());
+        var comments_edit = $('#comments-edit-'+report_id).val();
+        
+        if (isNaN(return_visit_edit) == true){
+            return_visit_edit = 0;
+        }
+        if (isNaN(bible_study_edit) == true){
+          bible_study_edit = 0;
+        }
+        if(hours_edit == ''){
+        $('.edit_hour_err'+report_id).html(
+        '<span style="color:red;">Hours is required</span>'
+        );
+        $(hours_edit).focus();
+        return false;
+        }else{
+          $('.edit_hour_err'+report_id).hide();
+        }
+      
+        if(bible_study_edit > return_visit_edit){
+        $('.edit_bs_err'+report_id).html(
+        '<span style="color:red;">Bible Studies MUST not be greater than Return Visits</span>'
+        );
+        $(return_visit_edit).focus();
+            return false;
+        }else{
+          $('.edit_bs_err'+report_id).hide();
+        } 
+      
+        $.ajax
+        ({
+        type: "POST",
+        url: "{% url 'submit-report-edit' %}",
+        data: {
+            'post_edit' : 1,
+            'report_id' : report_id,
+            'hours' : hours_edit,
+            'return_visit' : return_visit_edit,
+            'bible_study' : bible_study_edit,
+            'placements' : placements_edit,
+            'video' : video_edit,
+            'comments' : comments_edit,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+        },
+        beforeSend: function() {
+        $('.edit_hour_err'+report_id).html(
+        '<img src="Loader.gif" width="90" height="90"/>'
+        );
+        }, 
+        success: function(data)
+        {
+        setTimeout(function() {
+        $('.edit_hour_err'+report_id).html(data);
+        }, delay);
+        }
+        });
+        setInterval('location.reload()', 1000);
+      });
+   
+  });
+  </script>
+  {% endblock %} 

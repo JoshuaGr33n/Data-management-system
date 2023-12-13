@@ -1,0 +1,92 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+ Select Month & Year
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+{% if user.is_authenticated %}
+
+<main class="content">
+  {% include "main/includes/header.html" %} 
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+          <div class="d-block mb-4 mb-md-0">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+                <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                    <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
+                   
+                    <li class="breadcrumb-item active" aria-current="page">Select Month & Year</li>
+                </ol>
+            </nav>
+            <h2 class="h4">Submit Report</h2>
+            <p class="mb-0">Select Month & Year</p>
+          </div>
+          <div class="btn-toolbar mb-2 mb-md-0">          
+            <a href="/dashboard" class="btn btn-sm btn-secondary" style="margin-right:10px">Dashboard</a>
+          </div>
+        </div>
+            <div class="col-12 col-lg-6" style="margin:auto;">
+                <div class="card border-light shadow-sm">
+                  <div class="card-header d-flex align-items-center border-bottom border-light">
+                    <h3 class="h5 mb-0">Report Category</h3>
+                    <div class="ml-auto"><a class="text-primary font-weight-bold" href="#!"></a></div>
+                  </div>
+                  <div class="card-body">
+                   <form method="post" action="{% url 'submit-report-select-month-year' %}">
+                    {% csrf_token %}
+                      <div class="form-group mb-4"><label for="Month">Month</label>
+                        <div class="input-group">
+                              <span class="input-group-text" id="basic-addon3">
+                                   <span class="fas fa-calendar-alt"></span>
+                                </span>
+                         <select class="form-select mb-0" id="Month" name="Month" aria-label="Month" required>
+                              {% for current_month in current %}
+                               <option value="{{current_month.month}}">{{current_month.month}}</option>
+                              {% endfor %}
+                              {% for open_month in open %}
+                               <option value="{{open_month.month}}">{{open_month.month}}</option>
+                              {% endfor %}
+                          </select>           
+                       </div>
+                       <span></span>
+                     </div>
+    
+                     <div class="form-group mb-4"><label for="Year">Year</label>
+                        <div class="input-group">
+                              <span class="input-group-text" id="basic-addon3">
+                                   <span class="fas fa-calendar-alt"></span>
+                                </span>
+                         <select class="form-select mb-0" id="Year" name="Year" aria-label="Year" required>
+                          {% for current_year in current %}
+                           <option value="{{current_year.year}}">{{current_year.year}}</option>
+                          {% endfor %}
+                          {% for open_month in open %}
+                           <option value="{{open_month.year}}">{{open_month.year}}</option>
+                          {% endfor %}
+                          </select>           
+                       </div>
+                       <span></span>
+                     </div>
+    
+    
+                   
+    
+    
+    
+                     <input type="submit" class="btn btn-block btn-primary" value="Confirm" name="confirm" id ="confirm"/>
+    
+                    </form>
+                    </div>
+                </div>
+              </div>
+        
+         
+        <footer class="footer section py-5">
+         
+        </footer>
+      </main>
+      {% endif %}
+      {% endblock %} 
