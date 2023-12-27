@@ -1,0 +1,15 @@
+
+<title>404</title>
+{% if referring_url %}
+    <p><a href="{{ referring_url }}">Go back</a></p>
+{% else %}
+    <p><a href="{% url 'dashboard' %}">Dashboard</a></p>
+{% endif %}
+
+{% if error_message %}
+    <p>{{error_message}}</p>
+{% else %}
+    <p>Page NOT FOUND</p>
+{% endif %}
+
+

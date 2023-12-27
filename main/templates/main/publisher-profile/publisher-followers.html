@@ -1,483 +1,526 @@
-<!DOCTYPE html>
-<html lang="en">
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+{% extends 'main/base2.html' %}
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Profile: Mcdavid Emeruwa</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <meta name="title" content="">
-    <meta name="author" content="">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <link rel="canonical" href="">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="">
-    <meta property="og:title" content="">
-    <meta property="og:description" content="">
-    <meta property="og:image" content="">
-    <meta property="twitter:card" content="">
-    <meta property="twitter:url" content="">
-    <meta property="twitter:title" content="">
-    <meta property="twitter:description" content="">
-    <meta property="twitter:image" content="">
-    <link rel="apple-touch-icon" sizes="120x120" href="../../assets/img/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/img/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/img/favicon/favicon-16x16.png">
-    <link rel="manifest" href="../../assets/img/favicon/site.webmanifest">
-    <link rel="mask-icon" href="../../assets/img/favicon/safari-pinned-tab.svg" color="#ffffff">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
-    <link type="text/css" href="../../vendor/%40fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link type="text/css" href="../../vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
-    <link type="text/css" href="../../vendor/notyf/notyf.min.css" rel="stylesheet">
-    <link type="text/css" href="../../vendor/fullcalendar/main.min.css" rel="stylesheet">
-    <link type="text/css" href="../../vendor/dropzone/dist/min/dropzone.min.css" rel="stylesheet">
-    <link type="text/css" href="../../vendor/choices.js/public/assets/styles/choices.min.css" rel="stylesheet">
-    <link type="text/css" href="../../vendor/leaflet/dist/leaflet.css" rel="stylesheet">
-    <link type="text/css" href="../../css/volt.css" rel="stylesheet">
+{% block title %}
+Followers: {{ profile.first_name }} {{ profile.last_name }}
+{% endblock %}
 
-</head>
-
-<body>
-    <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-md-none"><a class="navbar-brand mr-lg-5"
-        href="../dashboard/dashboard.html"><img class="navbar-brand-dark" src="../../assets/img/brand/light.svg" alt="Volt logo"> <img
-          class="navbar-brand-light" src="../../assets/img/brand/dark.svg" alt="Volt logo"></a>
-      <div class="d-flex align-items-center"><button class="navbar-toggler d-md-none collapsed" type="button"
-          data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-          aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button></div>
-    </nav>
-    
-    
-    
-    <!--Navbar Start-->
-    
-    <nav id="sidebarMenu" class="sidebar d-md-block bg-primary text-white collapse" data-simplebar>
-    <div class="sidebar-inner px-4 pt-3">
-      <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
-        <div class="d-flex align-items-center">
-          <div class="user-avatar lg-avatar mr-4"><img src="../../../../assets/img/team/profile-picture-3.jpg"
-              class="card-img-top rounded-circle border-white" alt="Bonnie Green"></div>
-          <div class="d-block">
-            <h2 class="h6">Hello, McDavid</h2><a href="../../sign-in.html" class="btn btn-secondary text-dark btn-xs"><span
-                class="mr-2"><span class="fas fa-sign-out-alt"></span></span>Sign Out</a>
-          </div>
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+<style type="text/css">
+    .result-item:hover,
+    .result-item.hovered {
+        cursor: pointer;
+    }
+</style>
+<main class="content">
+    {% include "main/includes/header.html" %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+        <div> <a href="/publisher-profile/{{ profile.username }}" class="btn btn-secondary" aria-expanded="false">Back
+            </a>
         </div>
-        <div class="collapse-close d-md-none"><a href="#sidebarMenu" class="fas fa-times" data-toggle="collapse"
-            data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="true"
-            aria-label="Toggle navigation"></a></div>
-      </div>
-      <ul class="nav flex-column pt-3 pt-md-0">
-        <li class="nav-item"><a href="../dashboard/dashboard.html"><span class="nav-link collapsed d-flex justify-content-between align-items-center"
-            data-toggle="collapse" data-target="#submenu-dashboard"><span><span class="sidebar-icon"><span
-                  class="fas fa-chart-pie"></span></span> <span class="sidebar-text">Dashboard</span> </span></span></a>
-         
-        </li>
-    
-    
-       
-        <li class="nav-item"><a href="../all-publishers/all-publishers.html" class="nav-link"><span class="sidebar-icon"><span
-                class="fas fa-user"></span></span> <span class="sidebar-text">Publishers</span></a></li>
-        
-        <li class="nav-item"><a href="../groups/all-groups.html" class="nav-link"><span class="sidebar-icon"><span
-                class="fas fa-table"></span></span> <span class="sidebar-text">Groups</span></a></li>
-    
-         <li class="nav-item"><a href="../attendance/attendance-choose-month-year.html" class="nav-link"><span class="sidebar-icon"><span
-                    class="fas fa-clipboard-list"></span></span> <span class="sidebar-text">Attendance</span></a></li>       
-    
-                   
-    
-    
-    
-     
-      </ul>
+        <div>
+            <button class="btn btn-primary dropdown-toggle" data-toggle="modal" data-target="#add_follower_Modal"
+                id="add" name="add">
+                <span class="fas fa-user-plus mr-2"></span>Add Follower
+            </button>
+        </div>
     </div>
-    </nav>
-    
-    <!--Navbar End-->
-    
-    
-    
-    
-    <main class="content">
-    <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark pl-0 pr-2 pb-0">
-      <div class="container-fluid px-0">
-        <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
-          <div class="d-flex align-items-center"><button id="sidebar-toggle"
-              class="sidebar-toggle mr-3 btn btn-icon-only btn-lg btn-circle d-none d-md-inline-block"><span
-                class="fas fa-bars"></span></button>
-            <form class="navbar-search form-inline" id="navbar-search-main">
-              <div class="input-group input-group-merge search-bar"><span class="input-group-text"
-                  id="topbar-addon"><span class="fas fa-search"></span></span> <input type="text" class="form-control"
-                  id="topbarInputIconLeft" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon">
-              </div>
-            </form>
-          </div>
-    
-            <!-- Waiting Room -->
-          <ul class="navbar-nav align-items-center">
-            <li class="nav-item dropdown"><a class="nav-link text-dark mr-lg-3 icon-notifications"
-                data-unread-notifications="true" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false"><span class="icon icon-sm"><span class="fas fa-bell bell-shake"></span> <span
-                    class="icon-badge rounded-circle unread-notifications"></span></span></a>
-              <div class="dropdown-menu dashboard-dropdown dropdown-menu-lg dropdown-menu-center mt-2 py-0">
-                <div class="list-group list-group-flush"><a href="../dashboard/waiting-room.html"
-                    class="text-center text-primary font-weight-bold border-bottom border-light py-3">Waiting Room</a>
-                  <a href="../dashboard/waiting-room.html" class="list-group-item list-group-item-action border-bottom border-light">
-                    <div class="row align-items-center">
-                      <div class="col-auto"> <img alt="Image placeholder"
-                          src="../../assets/img/team/profile-picture-1.jpg"
-                          class="user-avatar lg-avatar rounded-circle"></div>
-                      <div class="col pl-0 ml--2">
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div>
-                            <h4 class="h6 mb-0 text-small">Mcdavid Emeruwa</h4>
-                          </div>
-                          <div class="text-right"><small class="text-danger">a few moments ago</small></div>
-                        </div>
-                        <!-- <p class="font-small mt-1 mb-0">Added you to an event "Project stand-up" tomorrow at 12:30 AM.
-                        </p> -->
-                      </div>
-                    </div>
-                  </a><a href="../dashboard/waiting-room.html" class="list-group-item list-group-item-action border-bottom border-light">
-                    <div class="row align-items-center">
-                      <div class="col-auto"> <img alt="Image placeholder"
-                          src="../../assets/img/team/profile-picture-2.jpg"
-                          class="user-avatar lg-avatar rounded-circle"></div>
-                      <div class="col pl-0 ml--2">
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div>
-                            <h4 class="h6 mb-0 text-small">Samuel Abikorigho</h4>
-                          </div>
-                          <div class="text-right"><small class="text-danger">2 hrs ago</small></div>
-                        </div>
-                        <!-- <p class="font-small mt-1 mb-0">You've been assigned a task for "Awesome new project".</p> -->
-                      </div>
-                    </div>
-                  </a>
-                   
-                  
-                  <a href="../dashboard/waiting-room.html" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
-                </div>
-              </div>
-            </li>
-            <!-- Waiting Room -->
-            <li class="nav-item dropdown"><a class="nav-link pt-1 px-0" href="#" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <div class="media d-flex align-items-center"><img class="user-avatar md-avatar rounded-circle"
-                    alt="Image placeholder" src="../../assets/img/team/profile-picture-3.jpg">
-                  <div class="media-body ml-2 text-dark align-items-center d-none d-lg-block"><span
-                      class="mb-0 font-small font-weight-bold">McDavid Emeruwa</span></div>
-                </div>
-              </a>
-    
-    
-              <div class="dropdown-menu dashboard-dropdown dropdown-menu-right mt-2"><a
-                  class="dropdown-item font-weight-bold" href="../publisher-profile/publisher-profile.html"><span class="far fa-user-circle"></span>My Profile</a>
-                
-                <a class="dropdown-item font-weight-bold" href="#"><span
-                    class="fas fa-envelope-open-text"></span>Messages</a> 
-                <div role="separator" class="dropdown-divider"></div><a class="dropdown-item font-weight-bold"
-                  href="../../sign-in.html"><span class="fas fa-sign-out-alt text-danger"></span>Logout</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    
-    
-    
-    
-    
-    
-    <!--Loading Logo-->
-      <div class="preloader bg-soft flex-column justify-content-center align-items-center"><img
-          class="loader-element animate__animated animate__jackInTheBox" src="../../assets/img/brand/light.svg" height="60"
-          alt="Volt logo">
-        </div>
-    <!--Loading Logo-->
-
-    
 
 
-    
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-
-            <div> <a href="publisher-profile.html" class="btn btn-secondary" aria-expanded="false">Back </a>
-
+    <div class="row">
+        <div class="col-12 col-xl-8">
+            <div id="transfer-follower-notification-bar" class="">
+                <p id="transfer-follower-notification-text" class=""></p>
             </div>
-
-            <div>
-              
-
-
-                <button class="btn btn-primary dropdown-toggle" data-toggle="modal" data-target="#add_data_Modal"
-                    id="add" name="add">
-                    <span class="fas fa-user-plus mr-2"></span>Add Follower
-                </button>
-
-            </div>
-
-
-
-
-        </div>
-
-
-
-        <!--Modal Start-->
-        <div class="modal fade" id="add_data_Modal" tabindex="-1" role="dialog" aria-labelledby="add_data_Modal"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <div class="card p-4"><button type="button" class="btn-close ml-auto" data-dismiss="modal"
-                                aria-label="Close"></button>
-                            <div class="card-header border-0 text-center pb-0">
-                                <h2 class="mb-0 h5">Add Another Publisher</h2>
-                            </div>
-                            <div class="card-body">
-
-
-                                <form method="post" id="create_user_form">
-                                    <div class="form-group mb-4"><label for="firstname">First Name</label>
-                                        <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
-                                                    class="fas fa-user-check"></span></span>
-                                            <input type="text" class="form-control"
-                                                style="border-left:1px solid; padding-left:6px" placeholder="First Name"
-                                                id="fname" name="fname" required /></div>
-                                        <span>(Required)</span>
-                                    </div>
-                                    <div class="form-group mb-4"><label for="email">Middle Name</label>
-                                        <div class="input-group"><span class="input-group-text" id="basic-addon3"><span
-                                                    class="fas fa-user-check"></span></span>
-                                            <input type="text" class="form-control"
-                                                style="border-left:1px solid; padding-left:6px"
-                                                placeholder="Middle Name" id="mname" name="mname" /></div>
-                                        <span>(Optional)</span>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="form-group mb-4"><label for="surname">Surname</label>
-                                            <div class="input-group"><span class="input-group-text"
-                                                    id="basic-addon4"><span class="fas fa-user-check"></span></span>
-                                                <input type="text" style="border-left:1px solid; padding-left:6px"
-                                                    placeholder="Surname" class="form-control" id="surname"
-                                                    name="surname" required /></div>
-                                            <span>(Required)</span>
-                                        </div>
-
-                                        <div class="form-group mb-4"><label for="gender">Gender</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text" id="basic-addon3">
-                                                    <span class="fas fa-user-check"></span>
-                                                </span>
-                                                <select class="form-select mb-0" id="gender" name="gender"
-                                                    aria-label="Gender select example" required>
-                                                    <option value="">Gender</option>
-                                                    <option value="F">Female</option>
-                                                    <option value="M">Male</option>
-                                                </select>
-                                            </div>
-                                            <span>(Required)</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="form-group mb-4"><label for="Phone">Phone Number</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text" id="basic-addon3">
-                                                <span class="fas fa-phone"></span>
-                                            </span>
-                                            <input type="number" class="form-select mb-0"
-                                                placeholder="e.g 0808 000 0000" id="secondary_phone"
-                                                name="secondary_phone" />
-                                        </div>
-                                        <span>(Optional)</span> <span></span>
-                                    </div>
-
-
-
-
-
-                                    
-                                    <input type="submit" id="save" class="btn btn-block btn-primary" value="Save"
-                                        name="save" />
-                                </form>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--Modal End-->
-
-
-
-
-
-
-
-
-
-
-
-        <div class="row">
-            <div class="col-12 col-xl-8">
-                <div class="card card-body border-light shadow-sm table-wrapper table-responsive">
-                    <div class="d-flex mb-3">
+            <div class="card card-body border-light shadow-sm table-wrapper table-responsive">
+                <form id="transferFollowerForm">
+                    {% csrf_token %}
+                    <div class="d-flex mb-3" id="newParent_username_response">
                         <div class="col-sm-4">
-
-
-                            <input class="form-control" id="search" type="text" placeholder="Search Publisher" />
-
-                        </div> <button class="btn btn-sm px-3 btn-primary border-light ml-3">Transfer</button>
+                            <input class="form-control" id="search" type="text" name="transfer_follower"
+                                placeholder="Search Publisher" />
+                            <input id="search_value" type="hidden" name="newParent_username" />
+                            <input type="hidden" name="currentParent_username" value="{{profile.username}}" />
+                        </div> <button type="button" class="btn btn-sm px-3 btn-primary border-light ml-3"
+                            id="transferFollowerFormBtn">Transfer</button>
                     </div>
+                    <div id="searchResults"></div>
+
                     <table class="table user-table table-hover table-striped align-items-center" id="datatable">
                         <thead>
                             <tr>
                                 <th class="border-bottom">
                                     <div class="form-check dashboard-check"><input class="form-check-input"
-                                            type="checkbox" value="" id="userCheck55"> <label class="form-check-label"
-                                            for="userCheck55"></label></div>
+                                            type="checkbox" id=""> <label class="form-check-label"
+                                            for=""></label></div>
                                 </th>
                                 <th class="border-bottom">Name</th>
 
                                 <th class="border-bottom">Status</th>
+                                <th class="border-bottom"></th>
+                                <th class="border-bottom"></th>
 
                             </tr>
                         </thead>
                         <tbody>
+                            <div class="form-check dashboard-check"><input class="form-check-input"
+                                type="checkbox" id="select-all"> <label class="form-check-label"
+                                for="select-all"></label></div>
+
+                            {% for follower in followers %}
+                            {% publisher_status_tag follower.username as name_tag %}
+                            {% first_letter_tag follower.first_name as first_letter %}
                             <tr>
                                 <td>
-                                    <div class="form-check dashboard-check"><input class="form-check-input"
-                                            type="checkbox" value="" id="userCheck1"> <label class="form-check-label"
-                                            for="userCheck1"></label></div>
+                                    <div class="form-check dashboard-check"><input class="form-check-input follower-id"
+                                            type="checkbox" value="{{follower.user_id}}" id="follower_id"
+                                            name="follower_id[]" data-user-id="{{follower.user_id}}"> <label
+                                            class="form-check-label item-checkbox" for="userCheck1"></label></div>
                                 </td>
-                                <td><a href="#" class="d-flex align-items-center"><img
-                                            src="../../assets/img/team/profile-picture-1.jpg"
-                                            class="user-avatar rounded-circle mr-3" alt="Avatar">
-                                        <div class="d-block"><span class="font-weight-bold">Gabriel Okezie</span>
-                                            <div class="small text-gray"><span class="__cf_email__"
-                                                    data-cfemail="deb7b0b8b19ebba6bfb3aeb2bbf0bdb1b3">[email&#160;protected]</span>
-                                            </div>
-                                        </div>
-                                    </a></td>
-                                <td><span class="font-weight-normal text-success">Active</span></td>
-
-                            </tr>
-
-
-                            <tr>
                                 <td>
-                                    <div class="form-check dashboard-check"><input class="form-check-input"
-                                            type="checkbox" value="" id="userCheck2"> <label class="form-check-label"
-                                            for="userCheck2"></label></div>
-                                </td>
-                                <td><a href="#" class="d-flex align-items-center">
-                                        <div class="user-avatar bg-secondary mr-3"><span>N</span></div>
-                                        <div class="d-block"><span class="font-weight-bold">Beauty Okereke</span>
-                                            <div class="small text-gray"><span class="__cf_email__"
-                                                    data-cfemail="7a13141c153a1f021b170a161f54191517">[email&#160;protected]</span>
+                                    <a href="{% url 'publisher-profile' follower.username %}"
+                                        class="d-flex align-items-center">
+                                        {% if image_exists %}
+                                        <img src="{% static image_path %}" class="user-avatar rounded-circle mr-3"
+                                            alt="Avatar">
+                                        {% else %}
+                                        <div class="user-avatar bg-secondary mr-3"><span>{{first_letter}}</span></div>
+                                        {% endif %}
+                                        <div class="d-block"><span
+                                                class="font-weight-bold name{{follower.user_id}}">{{follower.first_name}}
+                                                {{follower.last_name}}</span>
+                                            <div class="small text-gray"><span>Phone: {{follower.phone}}</span>
                                             </div>
                                         </div>
-                                    </a></td>
-                                    <td><span class="font-weight-normal text-warning">Pending</span></td>
-
-
-                            </tr>
-
-
-                            <tr>
+                                    </a>
+                                </td>
                                 <td>
-                                    <div class="form-check dashboard-check"><input class="form-check-input"
-                                            type="checkbox" value="" id="userCheck1"> <label class="form-check-label"
-                                            for="userCheck1"></label></div>
+                                    {% if follower.status == 'Active' %}
+                                    <span class="{{ name_tag }} font-weight-normal text-success"> Active</span>
+                                    {% elif follower.status == 'Pending' %}
+                                    <span class="{{ name_tag }} font-weight-normal text-success"> Pending</span>
+                                    {% else %}
+                                    <span class="{{ name_tag }} font-weight-normal text-success"> Deactivated</span>
+                                    {% endif %}
                                 </td>
-                                <td><a href="#" class="d-flex align-items-center"><img
-                                            src="../../assets/img/team/profile-picture-1.jpg"
-                                            class="user-avatar rounded-circle mr-3" alt="Avatar">
-                                        <div class="d-block"><span class="font-weight-bold">Lois Okereke</span>
-                                            <div class="small text-gray"><span class="__cf_email__"
-                                                    data-cfemail="deb7b0b8b19ebba6bfb3aeb2bbf0bdb1b3">[email&#160;protected]</span>
-                                            </div>
-                                        </div>
-                                    </a></td>
-                                    <td><span class="font-weight-normal text-success">Active</span></td>
-
-
+                                <td><a class="btn-sm btn-success {{follower.user_id}}" data-toggle="modal"
+                                        data-target="#create_full_account__Modal{{follower.user_id}}">Create Full
+                                        Account</a></td>
+                                <td>
+                                    {% if follower.status == 'Pending' %}
+                                    <span class="delete" data-id='{{follower.user_id}}' style='cursor:pointer;'>
+                                        <a class="btn btn-danger btn-xs"><span class="fas fa-trash-alt"></span></a>
+                                    </span>
+                                    {% endif %}
+                                </td>
                             </tr>
-
-
-
-
-
-
-
-
-
+                            {% endfor %}
                         </tbody>
                     </table>
-                </div>
-
-
-
+                </form>
             </div>
-            <div class="col-12 col-xl-4">
-                <div class="row">
-                    <div class="col-12 mb-4">
-                        <div class="card border-light text-center p-0">
-                            <div class="profile-cover rounded-top" data-background="../../assets/img/profile-cover.jpg">
-                            </div>
-                            <div class="card-body pb-5"><img src="../../assets/img/team/profile-picture-1.jpg"
-                                    class="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4"
-                                    alt="Neil Portrait">
-                                <h4 class="h3">McDavid Emeruwa</h4>
-                                <h5 class="font-weight-normal">Ministerial Servant</h5>
-                                <h5 class="font-weight-normal">Regular Pioneer</h5>
-                                <p class="text-gray mb-4">Active</p>
-                                <!-- <a class="btn btn-sm btn-primary mr-2" href="#"><span
-                    class="fas fa-user-plus mr-1"></span> Connect</a> <a class="btn btn-sm btn-secondary" href="#">Send
-                  Message</a> -->
-                            </div>
-                        </div>
-                    </div>
+        </div>
 
-
-
+        <div class="col-12 col-xl-4">
+            <div class="row">
+                <div class="col-12 mb-4">
+                    {% include "main/includes/profile-card.html" %}
                 </div>
             </div>
         </div>
-        <footer class="footer section py-5">
+    </div>
+    <footer class="footer section py-5">
 
-        </footer>
-    </main>
-    <script src="../../vendor/popper.js/dist/umd/popper.min.js"></script>
-    <script src="../../vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../../vendor/onscreen/dist/on-screen.umd.min.js"></script>
-    <script src="../../vendor/nouislider/distribute/nouislider.min.js"></script>
-    <script src="../../vendor/jarallax/dist/jarallax.min.js"></script>
-    <script src="../../vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
-    <script src="../../vendor/countup.js/dist/countUp.umd.js"></script>
-    <script src="../../vendor/chartist/dist/chartist.min.js"></script>
-    <script src="../../vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
-    <script src="../../vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
-    <script src="../../vendor/simple-datatables/dist/umd/simple-datatables.js"></script>
-    <script src="../../vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
-    <script src="../../../../../../cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
-    <script src="../../vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
-    <script src="../../vendor/fullcalendar/main.min.js"></script>
-    <script src="../../vendor/dropzone/dist/min/dropzone.min.js"></script>
-    <script src="../../vendor/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script src="../../vendor/notyf/notyf.min.js"></script>
-    <script src="../../vendor/leaflet/dist/leaflet.js"></script>
-    <script src="../../vendor/svgmap/dist/svgMap.min.js"></script>
-    <script src="../../vendor/simplebar/dist/simplebar.min.js"></script>
-    <script async defer="defer" src="../../../../../../buttons.github.io/buttons.js"></script>
-    <script src="../../assets/js/volt.js"></script>
-</body>
+    </footer>
+    {% include "main/includes/modals.html" %}
+</main>
+{% include "main/includes/js.html" %}
+<script>
+    window.FOLLOWERS_NUMBER = "{{ no_of_followers }}";
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('addFollowerFormBtn').addEventListener('click', function () {
+            // Perform client-side validation if needed
+            var no_of_followers = window.FOLLOWERS_NUMBER + 1;
+            // Prepare form data
+            var formData = new FormData(document.getElementById('add_follower_form'));
+
+            // Make AJAX request
+            fetch("{% url 'publisher-add-follower' %}", {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var notificationBar = document.getElementById('add-follower-notification-bar');
+                    var notificationText = document.getElementById('add-follower-notification-text');
+
+                    if (data.success) {
+                        // Handle success
+                        notificationBar.style.backgroundColor = '#4CAF50';
+                        notificationText.innerText = data.message;
+                        $('.error-message').remove();
+                        setInterval('location.reload()', 5000);
+
+                        // var newRow = "<tr>" +
+                        //     '<td><div class="form-check dashboard-check"><input class="form-check-input" type="checkbox"' +
+                        //     'value="" id="userCheck1"> <label class="form-check-label"' +
+                        //     'for="userCheck1"></label></div></td>' +
+                        //     "<td><a href='/publisher-profile/user.username' " +
+                        //         'class="d-flex align-items-center">'+
+                        //     '<div class="user-avatar bg-secondary mr-3"><span>{{first_letter}}</span></div></td>' +
+                        //     '<div class="d-block"><span class="font-weight-bold name{{user.user_id}}">{{user.first_name}}' +
+                        //                     '{{user.last_name}}</span>'+
+                        //                 '<div class="small text-gray"><span>Phone: {{user.phone}}</span> </div> </div> </a>'+
+                        //     '</td>'+
+                        //     '<td><span class="{{ name_tag }} font-weight-normal text-success"> Pending</span></td>'+   
+                        //     '<td><button class="btn-sm btn-success {{user.user_id}}" data-toggle="modal" '+
+                        //            'data-target="#create_full_account__Modal{{user.user_id}}">Create Full '+
+                        //             'Account</button></td>'+
+                        //      '<td><span class="delete" data-id="{{user.user_id}}"" style="cursor:pointer;">'+
+                        //             '<button class="btn btn-danger btn-xs"><span' +
+                        //                     'class="fas fa-trash-alt"></span></button>'+
+                        //         '</span></td>'+     
+                        // "</tr>";
+                        // Append the new row to the table body
+                        // $('#datatable tbody').append(newRow);
+
+                    } else {
+                        notificationBar.style.backgroundColor = '#f44336';  // Red color for error
+                        notificationText.innerText = 'Form submission failed. Please check the errors.';
+                        console.error(data.errors);  // Log errors to the console for debugging
+
+                        $('.error-message').remove();
+                        $.each(data.errors, function (field, messages) {
+                            $('#' + field + '_response').after('<span class="error-message" style="color:red;">' + messages.join(', ') + '</span>');
+                        });
+                    }
+                    // $('#add_follower_Modal').modal('hide');
+
+                    // Show the notification bar
+                    notificationBar.style.display = 'block';
+
+                    // Hide the notification bar after 3 seconds
+                    setTimeout(function () {
+                        notificationBar.style.display = 'none';
+                    }, 3000);
+
+                    if (data.success) {
+                        document.getElementById('add_follower_form').reset();
+                        $('.no_of_followers').html(no_of_followers);
+                        setTimeout(function () {
+                            $('.btn-close').click();
+                        }, 4000);
 
 
-</html>
+                    }
+                })
+                .catch(error => {
+                    var notificationBar = document.getElementById('add-follower-notification-bar');
+                    var notificationText = document.getElementById('add-follower-notification-text');
+
+                    notificationBar.style.backgroundColor = '#f44336';  // Red color for error
+                    notificationText.innerText = 'An error occurred during form submission.';
+                    notificationBar.style.display = 'block';
+                    setTimeout(function () {
+                        notificationBar.style.display = 'none';
+                    }, 3000);
+                });
+
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        // Delete 
+        $('.delete').click(function () {
+            var el = this;
+
+            // Delete id
+            var deleteid = $(this).data('id');
+
+            var name = $(".name" + deleteid).text();
+            // var lname = $(".last_name"+deleteid).text();
+
+            $.confirm({
+                title: 'WARNING!',
+                content: 'Are you sure you want to remove ' + name + ' from your followers list?',
+                buttons: {
+                    Yes: {
+                        text: 'Yes',
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            // AJAX Request
+                            $.ajax({
+                                url: '{% url "delete-follower" %}',
+                                type: 'POST',
+                                data: {
+                                    id: deleteid,
+                                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                                },
+
+                                success: function (response) {
+
+                                    if (response == 1) {
+                                        // Remove row from Table
+                                        $(el).closest('tr').css('background', 'red');
+                                        $(el).closest('tr').fadeOut(800, function () {
+                                            $(this).remove();
+                                        });
+                                    } else {
+                                        alert('Invalid Selection.');
+                                    }
+
+                                }
+
+                            });
+                            setInterval('location.reload()', 1000);
+                        }
+                    },
+                    cancel: function () {
+
+                    }
+                }
+            });
+
+        });
+
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('.create_full_account_btn').on('click', function () {
+            // Perform client-side validation if needed
+            var no_of_followers = window.FOLLOWERS_NUMBER - 1;
+            var user_id = $(this).data('id');
+            // Prepare form data
+            var formData = new FormData(document.getElementById('create_full_account_form' + user_id));
+
+            // Make AJAX request
+            fetch("{% url 'publisher-add-follower' %}", {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var notificationBar = document.getElementById('full-account-notification-bar' + user_id);
+                    var notificationText = document.getElementById('full-account-notification-text' + user_id);
+
+                    if (data.success) {
+                        // Handle success
+                        notificationBar.style.backgroundColor = '#4CAF50';
+                        notificationText.innerText = data.message;
+                        $('.error-message').remove();
+                    } else {
+                        notificationBar.style.backgroundColor = '#f44336';  // Red color for error
+                        notificationText.innerText = 'Form submission failed. Please check the errors.';
+                        console.error(data.errors);  // Log errors to the console for debugging
+
+                        $('.error-message').remove();
+                        $.each(data.errors, function (field, messages) {
+                            $('#' + field + '_response' + user_id).after('<span class="error-message" style="color:red;">' + messages.join(', ') + '</span>');
+                        });
+                    }
+                    // Show the notification bar
+                    notificationBar.style.display = 'block';
+
+                    // Hide the notification bar after 3 seconds
+                    setTimeout(function () {
+                        notificationBar.style.display = 'none';
+                    }, 3000);
+
+                    if (data.success) {
+                        document.getElementById('create_full_account_form' + user_id).reset();
+                        $('.' + user_id).closest('tr').css('background', 'red');
+                        $('.' + user_id).closest('tr').fadeOut(800, function () {
+                            $(this).remove();
+                        });
+                        $('.no_of_followers').html(no_of_followers);
+
+                        setTimeout(function () {
+                            $('.btn-close').click();
+                        }, 4000);
+
+                    }
+                })
+                .catch(error => {
+                    var notificationBar = document.getElementById('full-account-notification-bar' + user_id);
+                    var notificationText = document.getElementById('full-account-notification-text' + user_id);
+
+                    notificationBar.style.backgroundColor = '#f44336';  // Red color for error
+                    notificationText.innerText = 'An error occurred during form submission.';
+                    notificationBar.style.display = 'block';
+                    setTimeout(function () {
+                        notificationBar.style.display = 'none';
+                    }, 3000);
+                });
+
+        });
+    });
+</script>
+
+<script>
+    // JavaScript (jQuery)
+    $(document).ready(function () {
+        $('#search').on('input', function () {
+            var query = $(this).val();
+
+            $.ajax({
+                url: '/search/{{ profile.username }}/',  // Replace with your actual endpoint
+                data: { 'q': query },
+                dataType: 'json',
+                success: function (data) {
+                    displayResults(data.results);
+                }
+            });
+        });
+
+        function displayResults(results) {
+            var resultsContainer = $('#searchResults');
+            resultsContainer.empty();
+
+            if (results.length === 0) {
+                resultsContainer.hide();
+                return;
+            }
+
+            resultsContainer.show();
+
+            for (var i = 0; i < results.length; i++) {
+                var result = results[i];
+
+                var resultItem = $('<div class="result-item">' + result.name + '</div>');
+                resultsContainer.append(resultItem);
+
+                // Use a function to create a new scope for each result
+                (function (result) {
+                    resultItem.hover(function () {
+                        // Add a class when hovering over the result item
+                        $(this).addClass('hovered');
+                    }, function () {
+                        // Remove the class when the mouse leaves the result item
+                        $(this).removeClass('hovered');
+                    });
+
+                    // You can add click handlers or other interactions for each result item
+                    resultItem.click(function () {
+                        // Handle item click (e.g., fill the input with the selected item)
+                        $('#search').val(result.name);
+                        $('#search_value').val(result.username);
+                        resultsContainer.hide();
+                    });
+                })(result);
+            }
+        }
+
+    });
+
+</script>
+<script>
+
+    $(document).ready(function () {
+        $('#select-all').change(function () {
+            $('.item-checkbox').prop('checked', this.checked);
+        });
+
+        // Individual checkbox change event
+        $('.item-checkbox').change(function () {
+            // Update Select All checkbox based on the status of individual checkboxes
+            $('#select-all').prop('checked', $('.item-checkbox:checked').length === $('.item-checkbox').length);
+        });
+
+
+        $('#transferFollowerFormBtn').click(function () {
+            // Get the form data
+            var formData = $('#transferFollowerForm').serialize();
+            // Get the checked checkboxes with a specific class (replace 'your-checkbox-class' with the actual class)
+            var checkedCheckboxes = $('.follower-id:checked');
+            // Get the user_ids from the checked checkboxes
+            var user_ids = checkedCheckboxes.map(function () {
+                return $(this).data('user-id');
+            }).get();
+
+            // Initialize notification variables
+            var finalNotificationColor = '#4CAF50';
+            var finalNotificationText = '';
+
+            // Make an AJAX request for each selected follower
+            user_ids.forEach(function (user_id, index) {
+                var no_of_followers = window.FOLLOWERS_NUMBER - user_ids.length;
+                console.log(user_ids.length);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'publisher-add-follower' %}",
+                    data: formData,
+                    success: function (data) {
+
+                        if (data.success) {
+                            // Handle success
+                            console.log('Form submitted successfully:', data.message);
+
+                            // Update notification variables based on the last iteration
+                            finalNotificationColor = '#4CAF50';
+                            finalNotificationTextColor = '#FFFFFF';
+                            finalNotificationText = data.message;
+
+                            $('.' + user_id).closest('tr').css('background', 'red');
+                            $('.' + user_id).closest('tr').fadeOut(800, function () {
+                                $(this).remove();
+                            });
+                            $('.no_of_followers').html(no_of_followers);
+
+                            // Check if it's the last iteration, then update the notification elements
+                            if (index === user_ids.length - 1) {
+                                updateNotification(finalNotificationColor, finalNotificationTextColor, finalNotificationText);
+                            }
+                        } else {
+                            // Handle error
+                            console.error('Error submitting form:', data.errors);
+                            // Handle errors for the specific follower
+
+                            // Update notification variables based on the last iteration
+                            finalNotificationColor = '#f44336';
+                            finalNotificationTextColor = '#FFFFFF';
+                            finalNotificationText = 'Form submission failed. Please check the errors.';
+
+                            console.error(data.errors);
+
+                            $('.error-message').remove();
+                            $.each(data.errors, function (field, messages) {
+                                $('#' + field + '_response').after('<span class="error-message" style="color:red;">' + messages.join(', ') + '</span>');
+                            });
+
+                            // Check if it's the last iteration, then update the notification elements
+                            if (index === user_ids.length - 1) {
+                                updateNotification(finalNotificationColor, finalNotificationTextColor, finalNotificationText);
+                            }
+                        }
+
+                    },
+                    error: function (error) {
+                        // Handle error
+                        console.error('Error submitting form:', error);
+                    }
+                });
+            });
+        });
+        // Function to update notification elements
+        function updateNotification(color, textColor, text) {
+            var notificationBar = document.getElementById('transfer-follower-notification-bar');
+            var notificationText = document.getElementById('transfer-follower-notification-text');
+
+            notificationBar.style.backgroundColor = color;
+            notificationText.style.color = textColor;
+            notificationText.innerText = text;
+
+            setTimeout(function () {
+                notificationBar.style.display = 'none';
+            }, 3000);
+        }
+    });
+
+
+</script>
+{% endblock %}

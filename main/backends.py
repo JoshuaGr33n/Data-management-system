@@ -13,6 +13,7 @@ class PhoneAuthenticationBackend(object):
                 # Q(username=username) |
                  Q(phone=username) 
                 # | Q(email=username)
+                & ~Q(password='') & ~Q(password=None)
             )
 
         except User.DoesNotExist:

@@ -1,7 +1,7 @@
 {% extends 'main/base2.html' %}
 
 {% block title %}
- All Active Publishers
+All Active Publishers
 {% endblock %}
 
 {% block content %}
@@ -9,97 +9,111 @@
 {% load custom_template_tags %}
 
 <main class="content">
-  {% include "main/includes/header.html" %} 
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-          <div class="d-block mb-4 mb-md-0">
-            <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
-                <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                    <li class="breadcrumb-item"><a href="/dashboard/"><span class="fas fa-home"></span></a></li>
-            <li class="breadcrumb-item active" aria-current="page">All Active Publishers</li>
-          </ol>
-        </nav>
-        <h2 class="h4">Publishers</h2>
-        <p class="mb-0">All Active Publishers({{count_active_publishers}})</p>
-      </div>
-      {% if publisher.publisherprofile.privilege == "1" %}
-      <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="/publishers/choose-category" class="btn btn-sm btn-success" style="margin-right:10px"><span
-            class="fas  mr-2"></span>All Publishers Report</a>
-
-        <a href="/publishers/non-publishers" class="btn btn-sm btn-secondary" style="margin-right:10px"><span
-            class="fas  mr-2"></span>Non Publishers</a>
-
-         <a href="deactivated-publishers" class="btn btn-sm btn-danger"><span
-                class="fas  mr-2"></span>Deactivated Publishers</a>
-      </div>
-      {% endif %} 
+  {% include "main/includes/header.html" %}
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    <div class="d-block mb-4 mb-md-0">
+      <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+        <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+          <li class="breadcrumb-item"><a href="/dashboard/"><span class="fas fa-home"></span></a></li>
+          <li class="breadcrumb-item active" aria-current="page">All Active Publishers</li>
+        </ol>
+      </nav>
+      <h2 class="h4">Publishers</h2>
+      <p class="mb-0">All Active Publishers({{count_active_publishers}})</p>
     </div>
+    {% if publisher.publisherprofile.privilege == "1" %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <a href="/publishers/choose-category" class="btn btn-sm btn-success" style="margin-right:10px"><span
+          class="fas  mr-2"></span>All Publishers Report</a>
 
-   
-    <div class="card card-body border-light shadow-sm table-wrapper table-responsive">
-      <table class="table user-table table-hover table-striped align-items-center" id="datatable">
-        <thead>
-          <tr>
-            <th class="border-bottom">#</th>
-            <th class="border-bottom">Name</th>
-            <th class="border-bottom">Gender</th>
-            {% if publisher.publisherprofile.privilege == "1" %}
-             <th class="border-bottom">Phone</th>
-            {% endif %} 
-            <th class="border-bottom">Group</th>
-            <th class="border-bottom">Pioneer</th>
-            <th class="border-bottom">Appointment</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for u_publisher in all_publishers %}
-        
-              {% if u_publisher.pioneer == "1" %}
-                   {% setPioneer "P" as pioneer %}
-              {% elif u_publisher.pioneer == "2" %}
-                   {% setPioneer "A" as pioneer %}     
-              {% else %}
-                   {% setPioneer "" as pioneer %}
-              {% endif %}
-              
-              {% if u_publisher.appointment == "1" %}
-                   {% setAppointment "Elder" as appointment %}
-              {% elif u_publisher.appointment == "2" %}
-                   {% setAppointment "MS" as appointment %}     
-              {% else %}
-                   {% setAppointment "" as appointment %}
-              {% endif %}
-              
-            <tr>
-              <td>
-                {{ forloop.counter }}
-                {% count_followers pending_publisher.username as number_of_followers %}
-            </td>
-              <td><a href="/publisher-profile/{{ u_publisher.username}}" class="d-flex align-items-center"><img src="{% static 'main/assets/img/blank.png' %}"
-                    class="user-avatar rounded-circle mr-3" alt="{{ u_publisher.first_name }}">
-                  <div class="d-block"><span class="font-weight-bold"> {{ u_publisher.first_name }}  {{ u_publisher.last_name }} </span>
-                    <div class="small text-gray"><span class="__cf_email__"
-                        data-cfemail="deb7b0b8b19ebba6bfb3aeb2bbf0bdb1b3">{{ u_publisher.email }} </span></div>
-                  </div>
-                </a></td>
-                {% get_fields_task_name u_publisher.gender %}
-              <td><span class="font-weight-normal">{{ u_publisher.gender }} </span></td>
-              {% if publisher.publisherprofile.privilege == "1" %}
-               <td><span class="font-weight-normal"><span class="fas mr-2"></span>{{ u_publisher.phone }}</span></td>
-              {% endif %}
-              <td><span class="font-weight-normal">{{ u_publisher.groupName }}</span></td>
-              <td><span class="font-weight-normal">{{ pioneer }}</span></td>
-              <td><span class="font-weight-normal">{{ appointment }}</span></td> 
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <a href="/publishers/non-publishers" class="btn btn-sm btn-secondary" style="margin-right:10px"><span
+          class="fas  mr-2"></span>Non Publishers</a>
+
+      <a href="deactivated-publishers" class="btn btn-sm btn-danger"><span class="fas  mr-2"></span>Deactivated
+        Publishers</a>
     </div>
-     
-    <footer class="footer section py-5">
-      {% random_number %}
-      {% gold %}
-    </footer>
-  </main>
-  {% include "main/includes/js.html" %}
-  {% endblock %} 
+    {% endif %}
+  </div>
+
+
+  <div class="card card-body border-light shadow-sm table-wrapper table-responsive">
+    <table class="table user-table table-hover table-striped align-items-center" id="datatable">
+      <thead>
+        <tr>
+          <th class="border-bottom">#</th>
+          <th class="border-bottom">Name</th>
+          <th class="border-bottom">Gender</th>
+          {% if publisher.publisherprofile.privilege == "1" %}
+          <th class="border-bottom">Phone</th>
+          {% endif %}
+          <th class="border-bottom">Group</th>
+          <th class="border-bottom">Pioneer</th>
+          <th class="border-bottom">Appointment</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u_publisher in all_publishers %}
+
+        {% if u_publisher.pioneer == "1" %}
+        {% setPioneer "P" as pioneer %}
+        {% elif u_publisher.pioneer == "2" %}
+        {% setPioneer "A" as pioneer %}
+        {% else %}
+        {% setPioneer "" as pioneer %}
+        {% endif %}
+
+        {% if u_publisher.appointment == "1" %}
+        {% setAppointment "Elder" as appointment %}
+        {% elif u_publisher.appointment == "2" %}
+        {% setAppointment "MS" as appointment %}
+        {% else %}
+        {% setAppointment "" as appointment %}
+        {% endif %}
+
+        <tr>
+          <td>
+            {{ forloop.counter }}
+            {% count_followers pending_publisher.username as number_of_followers %}
+          </td>
+          <td>
+            {% if publisher.publisherprofile.privilege == "1" or u_publisher.parent_id == publisher.publisherprofile.username  %}
+            <a href="/publisher-profile/{{ u_publisher.username}}" class="d-flex align-items-center"><img
+                src="{% static 'main/assets/img/blank.png' %}" class="user-avatar rounded-circle mr-3"
+                alt="{{ u_publisher.first_name }}">
+              <div class="d-block"><span class="font-weight-bold"> {{ u_publisher.first_name }} {{ u_publisher.last_name }} </span>
+                <div class="small text-gray"><span class="__cf_email__"
+                    data-cfemail="deb7b0b8b19ebba6bfb3aeb2bbf0bdb1b3">{{ u_publisher.email }} </span></div>
+              </div>
+            </a>
+            {% else %}
+            <span class="d-flex align-items-center"><img
+                src="{% static 'main/assets/img/blank.png' %}" class="user-avatar rounded-circle mr-3"
+                alt="{{ u_publisher.first_name }}">
+              <div class="d-block"><span class="font-weight-bold"> {{ u_publisher.first_name }} {{ u_publisher.last_name }} </span>
+                <div class="small text-gray"><span class="__cf_email__"
+                    data-cfemail="deb7b0b8b19ebba6bfb3aeb2bbf0bdb1b3">{{ u_publisher.email }} </span></div>
+              </div>
+            </span>
+            {% endif %}
+          </td>
+          {% get_fields_task_name u_publisher.gender %}
+          <td><span class="font-weight-normal">{{ u_publisher.gender }} </span></td>
+          {% if publisher.publisherprofile.privilege == "1" %}
+          <td><span class="font-weight-normal"><span class="fas mr-2"></span>{{ u_publisher.phone }}</span></td>
+          {% endif %}
+          <td><span class="font-weight-normal">{{ u_publisher.groupName }}</span></td>
+          <td><span class="font-weight-normal">{{ pioneer }}</span></td>
+          <td><span class="font-weight-normal">{{ appointment }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="footer section py-5">
+    {% random_number %}
+    {% gold %}
+  </footer>
+</main>
+{% include "main/includes/js.html" %}
+{% endblock %}

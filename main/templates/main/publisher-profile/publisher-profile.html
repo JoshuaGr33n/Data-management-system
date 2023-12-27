@@ -1,7 +1,7 @@
 {% extends 'main/base2.html' %}
 
 {% block title %}
-Submit Report
+Profile: {{ profile.first_name }} {{ profile.last_name }}
 {% endblock %}
 
 {% block content %}
@@ -18,12 +18,6 @@ Submit Report
             </a>
         </div>
     </div>
-
-
-
-
-
-
     <div class="row">
         <div class="col-12 col-xl-8">
             <div class="card card-body bg-white border-light shadow-sm mb-4">
@@ -91,8 +85,13 @@ Submit Report
                         <div class="col-sm-4 mb-3">
                             <div class="form-group">
                                 <label for="city">Group</label>
+                                {% if profile.groupName == "Non-Publisher" %}
+                                <input class="form-control" id="group" type="text" placeholder="Group"
+                                    value="{{ profile.groupName }}" disabled />
+                                {% else %}  
                                 <input class="form-control" id="group" type="text" placeholder="Group"
                                     value="Group {{ profile.groupName }}" disabled />
+                                {% endif %}  
                             </div>
                         </div>
                         <div class="col-sm-4 mb-3">
@@ -104,14 +103,14 @@ Submit Report
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label for="Parent Id">Parent Id</label>
+                                <label for="Parent Id">Parent user</label>
                                 <input class="form-control" id="Parent Id" type="text" placeholder="Parent Id"
-                                    value="None" disabled />
+                                    value="{{parent}}" disabled />
                             </div>
                         </div>
                     </div>
                     <div class="mt-3">
-                        <a href="publisher-profile-settings.html" class="btn btn-primary"><span
+                        <a href="{{ profile.username }}/settings" class="btn btn-primary"><span
                                 class="fas fa-cog"></span> Settings</a>
                     </div>
                 </form>
@@ -172,40 +171,7 @@ Submit Report
         </div>
         <div class="col-12 col-xl-4">
             <div class="row">
-                <div class="col-12 mb-4">
-                    <div class="card border-light text-center p-0">
-                        <div class="profile-cover rounded-top" data-background="../../assets/img/profile-cover.jpg">
-                        </div>
-                        {% if profile.pioneer == "1" %}
-                        {% setPioneer "Regular Pioneer" as pioneer %}
-                        {% elif profile.pioneer == "2" %}
-                        {% setPioneer "Auxiliary Pioneer" as pioneer %}
-                        {% else %}
-                        {% setPioneer "" as pioneer %}
-                        {% endif %}
-
-                        {% if profile.appointment == "1" %}
-                        {% setAppointment "Elder" as appointment %}
-                        {% elif profile.appointment == "2" %}
-                        {% setAppointment "Ministerial Servant" as appointment %}
-                        {% else %}
-                        {% setAppointment "" as appointment %}
-                        {% endif %}
-                        <div class="card-body pb-5"><img src="{% static 'main/assets/img/team/profile-picture-1.jpg' %}"
-                                class="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" alt="Neil Portrait">
-                            <h4 class="h3">{{ profile.first_name }} {{ profile.last_name }}</h4>
-                            <h5 class="font-weight-normal">{{ appointment }}</h5>
-                            <h5 class="font-weight-normal">{{ pioneer }}</h5>
-                            <p class="text-gray mb-4">{{ profile.status }}</p>
-                            <a class="btn btn-sm btn-primary mr-2" href="publisher-followers.html"><span
-                                    class="fas fa-user mr-1"></span> Followers</a>
-                            <a class="btn btn-sm btn-secondary" href="#">Send
-                                Message</a>
-                        </div>
-                    </div>
-                </div>
-
-
+                {% include "main/includes/profile-card.html" %}
                 <div class="col-12">
                     <div class="card card-body bg-white border-light shadow-sm mb-4">
                         <li class="list-group-item d-flex align-items-center justify-content-between px-0">
@@ -217,17 +183,11 @@ Submit Report
                                 <div class="form-check form-switch"><input class="form-check-input" type="checkbox"
                                         id="user-notification-3"> <label class="form-check-label"
                                         for="user-notification-3"></label></div>
-
                             </div>
                             <button class="btn btn-sm btn-primary">Apply</button>
                         </li>
-
-
                     </div>
                 </div>
-
-
-
                 <div class="col-12">
                     <div class="card card-body bg-white border-light shadow-sm mb-4">
                         <h2 class="h5 mb-4">Restricted Area</h2>
@@ -236,37 +196,20 @@ Submit Report
                                 publisher</label>
                             <input class="form-check-input" type="checkbox" value="" id="every_record"
                                 name="every_record" />
-
                         </div>
-
                         <div class="form-check mb-4">
                             <label class="form-check-label" for="only_profile">Delete only publisher profile, keep
                                 report records</label>
                             <input class="form-check-input" type="checkbox" value="" id="only_profile"
                                 name="only_profile" />
-
                         </div>
-
-
                         <div class="d-xl-flex align-items-center">
-
                             <button class="btn btn-sm btn-danger" id="questionAlert">Delete Publisher</button>
-
-
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
-
-
-
-
-
-
     </div>
     <footer class="footer section py-5">
 

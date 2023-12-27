@@ -1,0 +1,143 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+{{category}} Report for
+{% if first_element.month == last_element.month and first_element.year == last_element.year %}
+    {{first_element.month}} {{last_element.year}} ({{selected_month_number}} Month)
+{% else %}
+{{last_element.month}} {{last_element.year}} - {{first_element.month}}
+    {{first_element.year}} ({{selected_month_number}} Months)
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+<main class="content">
+    {% include "main/includes/header.html" %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+        <div class="d-block mb-4 mb-md-0">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+                <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                    <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'all-active-publishers' %}">All Publishers</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'choose-category' %}">Select Report Category</a></li>
+                    <li class="breadcrumb-item"><a href="/publishers/select-multiple-months-report">Select
+                            Month/Year</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Reports</li>
+                </ol>
+            </nav>
+            <h2 class="h4"> {{category}} Report</h2>
+            {% if first_element.month == last_element.month and first_element.year == last_element.year %}
+            <p class="mb-0">For
+                {{first_element.month}} {{last_element.year}} ({{selected_month_number}} Month)
+            </p>
+            {% else %}
+            {% if last_element.month|add:"1" == first_element.month and last_element.year == first_element.year %}
+            <p class="mb-0">For {{first_element.month}} {{first_element.year}} - {{last_element.month}}
+                {{last_element.year}} ({{selected_month_number}} Months)</p>
+            {% else %}
+            <p class="mb-0">For
+                {{last_element.month}} {{last_element.year}} -
+                {{first_element.month}} {{first_element.year}}
+                ({{selected_month_number}} Months)
+            </p>
+            {% endif %}
+            {% endif %}
+
+            
+        </div>
+        <div class="btn-toolbar mb-2 mb-md-0">
+
+            <a href="{% url 'multiple-months-report-stats' %}" class="btn btn-sm btn-primary"
+                style="margin-right:10px"><span class="fas fa-book mr-2"></span>Report Statistics</a>
+
+            <a href="/publishers/select-multiple-months-report" class="btn btn-sm btn-secondary"
+                style="margin-right:10px">Back</a>
+        </div>
+    </div>
+    <div class="card card-body border-light shadow-sm table-wrapper table-responsive">
+
+        <table class="table table-centered table-nowrap mb-0 rounded" id="datatable">
+            <thead class="thead-light">
+                <tr>
+                    <th class="border-bottom" rowspan="2">
+                        <div class="form-check dashboard-check">#</div>
+                    </th>
+                    <th class="border-bottom" rowspan="2">Name</th>
+                    <th class="border-bottom" colspan="1">Placements</th>
+                    <th class="border-bottom" colspan="1">Video Showings</th>
+                    <th class="border-bottom" colspan="1">Hours</th>
+                    <th class="border-bottom" colspan="1">Return Vists</th>
+                    <th class="border-bottom" colspan="1">Bible Studies</th>
+                </tr>
+                <tr>
+                    <th><span class="border-bottom">Total/Average</span></th>
+                    <th><span class="border-bottom">Total/Average</span></th>
+                    <th><span class="border-bottom">Total/Average</span></th>
+                    <th><span class="border-bottom">Total/Average</span></th>
+                    <th><span class="border-bottom">Total/Average</span></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <ul style="list-style-type: none;">
+                    {% for month_year in selected_month_years %}
+                    <li style="float: left; ">{{ month_year.month }} {{ month_year.year }}{% if not forloop.last %} , {% endif %}</li>
+                    {% endfor %}
+                </ul>
+
+                {% for report in reports %}
+
+                {% multiple_months_report_avg report.total_placements selected_month_number as placements_avg %}
+                {% multiple_months_report_avg report.total_video_showings selected_month_number as video_showings_avg %}
+                {% multiple_months_report_avg report.total_hours selected_month_number as hours_avg %}
+                {% multiple_months_report_avg report.total_return_visits selected_month_number as return_visits_avg %}
+                {% multiple_months_report_avg report.total_bible_studies selected_month_number as bible_studies_avg %}
+
+                {% publisher_report_name report.publisher_username as publisher_report_name %}
+                {% publisher_status_tag publisher_report_name.username as name_tag %}
+                <tr>
+                    <td>
+                        <div class="form-check dashboard-check">
+                            {{ forloop.counter }}
+                        </div>
+                    </td>
+                    <td><a href="/publisher-profile/{{ publisher_report_name.username}}"
+                            class="d-flex align-items-center"><img src="../../images/<?php echo $pic; ?>"
+                                class="user-avatar rounded-circle mr-3" alt="<?php echo $publishers_firstname; ?>">
+                            <div class="d-block"><span class="font-weight-bold">
+                                    <span class="{{name_tag}}"></span>
+                                    {{publisher_report_name.first_name}} {{publisher_report_name.last_name}}
+                                </span>
+                            </div>
+                        </a></td>
+                    <td><span class="font-weight-normal">
+                            {{report.total_placements}}/{{placements_avg|floatformat:2 }}
+                        </span></td>
+                    <td><span class="font-weight-normal">
+                            {{report.total_video_showings}}/{{video_showings_avg|floatformat:2 }}
+                        </span>
+                    </td>
+                    <td><span class="font-weight-normal">
+                            {{report.total_hours}}/{{hours_avg|floatformat:2 }}
+                        </span></td>
+                    <td><span class="font-weight-normal">
+                            {{report.total_return_visits}}/{{return_visits_avg|floatformat:2 }}
+                        </span></td>
+                    <td><span class="font-weight-normal">
+                            {{report.total_bible_studies}}/{{bible_studies_avg|floatformat:2 }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <footer class="footer section py-5">
+
+    </footer>
+</main>
+{% include "main/includes/js.html" %}
+{% endblock %}

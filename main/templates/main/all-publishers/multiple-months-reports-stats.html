@@ -1,0 +1,157 @@
+{% extends 'main/base2.html' %}
+
+{% block title %}
+{{category}} Multiple Months Report Stats
+for
+{% if first_element.month == last_element.month and first_element.year == last_element.year %}
+{{first_element.month}} {{last_element.year}} ({{selected_month_number}} Month)
+{% else %}
+{{last_element.month}} {{last_element.year}} - {{first_element.month}}
+{{first_element.year}} ({{selected_month_number}} Months)
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load custom_template_tags %}
+<style type="text/css">
+  @media print {
+    .card-print {
+      width: 100%;
+    }
+
+    .print-display {
+      display: none
+    }
+  }
+
+  @media screen {
+
+    .card-print {
+      width: 50%;
+      margin: auto;
+    }
+  }
+
+  @media only screen and (max-width: 800px) {
+    .card-print {
+      width: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 640px) {
+
+    .card-print {
+      width: 100%;
+    }
+  }
+</style>
+{% multiple_months_report_avg total_placements selected_month_number as placements_avg %}
+{% multiple_months_report_avg total_video_showings selected_month_number as video_showings_avg %}
+{% multiple_months_report_avg total_hours selected_month_number as hours_avg %}
+{% multiple_months_report_avg total_return_visits selected_month_number as return_visits_avg %}
+{% multiple_months_report_avg total_bible_studies selected_month_number as bible_studies_avg %}
+ 
+<main class="content">
+  {% include "main/includes/header.html" %}
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    <div class="d-block mb-4 mb-md-0">
+      <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+        <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+          <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'all-active-publishers' %}">All Publishers</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'choose-category' %}">Select Report Category</a></li>
+          <li class="breadcrumb-item"><a href="/publishers/select-multiple-months-report">Select
+            Month/Year</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'multiple-months-report' %}">Report</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Report Statistics</li>
+        </ol>
+      </nav>
+      <h2 class="h4">{{category}} Report Statistics</h2>
+      <p class="mb-0">For {% if first_element.month == last_element.month and first_element.year == last_element.year %}
+        {{first_element.month}} {{last_element.year}} ({{selected_month_number}} Month)
+        {% else %}
+        {{last_element.month}} {{last_element.year}} - {{first_element.month}}
+        {{first_element.year}} ({{selected_month_number}} Months)
+        {% endif %}
+      </p>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+
+      <a class="btn btn-sm btn-info print-display" style="margin-right:80px;" onclick="window.print()">Print</a>
+      <a href="{% url 'multiple-months-report' %}" class="btn btn-sm btn-secondary print-display" style="margin-right:10px">Back</a>
+    </div>
+  </div>
+  <div class="card border-light shadow-sm card-print">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-centered table-nowrap mb-0 rounded">
+          <thead class="thead-light">
+            <tr>
+              <th class="border-0"></th>
+              <th class="border-0">Total</th>
+              <th class="border-0">Average</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">No. of {{tag|lower}} reported</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{number_of_publishers_reported}}</td>
+              <td class="border-0"> <span class="font-weight-bold"></span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Hours</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold"> {{total_hours}}</td>
+              <td class="border-0"> <span class="font-weight-bold">{{hours_avg|floatformat:2 }}</span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Placements</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_placements}}</td>
+              <td class="border-0 "> <span class="font-weight-bold">{{placements_avg|floatformat:2 }}</span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Return Visits</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_return_visits}}</td>
+              <td class="border-0 "> <span class="font-weight-bold">{{return_visits_avg|floatformat:2 }}</span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Bible Studies</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_bible_studies}}</td>
+              <td class="border-0 "><span class="font-weight-bold">{{bible_studies_avg|floatformat:2 }}</span></td>
+
+            </tr>
+            <tr>
+              <td class="border-0"><a href="#" class="d-flex align-items-center">
+                  <div><span class="h6">Video Showings</span></div>
+                </a></td>
+              <td class="border-0 font-weight-bold">{{total_video_showings}}</td>
+              <td class="border-0 "> <span class="font-weight-bold">{{video_showings_avg|floatformat:2 }}</span></td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer section py-5">
+
+  </footer>
+</main>
+{% include "main/includes/js.html" %}
+{% endblock %}

@@ -46,7 +46,7 @@
             </div>
             <div class="card-body">
 
-
+                <div id="alerts-container"></div>
                 <div class="form-group mb-4" style="margin-left:20%"><label for="Export">Export Reports for this
                         Month to Excel</label>
                     <div class="input-group" style="margin-left:20%">
@@ -70,9 +70,9 @@
                                 <span class="fas fa-list-alt"></span>
                             </span>
 
-                            <input type="file" class="btn btn-sm btn-primary" name="excel_file" accept=".csv, .xls, .xlsx" /> <input
-                                type="submit" name="import_submit" class="btn btn-sm btn-success"
-                                style="margin-right:10px" value="Import" />
+                            <input type="file" class="btn btn-sm btn-primary" name="excel_file"
+                                accept=".csv, .xls, .xlsx" /> <input type="submit" name="import_submit"
+                                class="btn btn-sm btn-success" style="margin-right:10px" value="Import" />
 
                         </div>
                         <span></span>
@@ -88,6 +88,8 @@
                     {{category}} report for
                     {{month_year.month}} {{month_year.year}}
                 </button>
+                <input type="hidden" id="category-input" value="{{category_input}}">
+                <input type="hidden" id="month-year-id" value="{{month_year.id}}">
 
 
                 <!-- export modal -->
@@ -113,19 +115,15 @@
 
                     </div>
                     <!-- export modal -->
-
-
-
-
                 </div>
             </div>
         </div>
 
 
         <footer class="footer section py-5">
-     {% for test in tests %}
-       {{test.pioneer}}
-     {% endfor %}
+            {% for test in tests %}
+            {{test.pioneer}}
+            {% endfor %}
 
         </footer>
 </main>
@@ -134,60 +132,75 @@
 
 
 <script>
-  $(document).ready(function () {
+    $(document).ready(function () {
 
-      // Delete 
-      $('.content').on('click', '.deleteALL', function() {
-          var el = this;
-          
+        // Delete 
+        $('.content').on('click', '.deleteALL', function () {
+            var el = this;
+            var category = document.getElementById("category-input").value;
+            var monthYearId = document.getElementById("month-year-id").value;
 
-          // Delete id
-        //   var deleteid = $(this).data('id');
+            $.confirm({
+                title: 'WARNING!',
+                content: 'Are you sure you want to remove this report?',
+                buttons: {
+                    Yes: {
+                        text: 'Yes',
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            // AJAX Request
+                            $.ajax({
+                                url: '{% url "delete-reports" %}',
+                                type: 'POST',
+                                data: {
+                                    //   id: deleteid,
+                                    //   tag: "delete",
+                                    monthYearId: monthYearId,
+                                    category: category,
+                                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                                },
 
-          $.confirm({
-              title: 'WARNING!',
-              content: 'Are you sure you want to remove this report?',
-              buttons: {
-                  Yes: {
-                      text: 'Yes',
-                      btnClass: 'btn-danger',
-                      action: function () {
-                          // AJAX Request
-                          $.ajax({
-                              url: '{% url "delete-reports" %}',      
-                              type: 'POST',
-                              data: {
-                                //   id: deleteid,
-                                //   tag: "delete",
-                                  csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
-                              },
+                                success: function (response) {
 
-                              success: function (response) {
+                                    if (response == 1) {
+                                        // Create Bootstrap alert dynamically
+                                        var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">\
+                                            {{category}} report for {{month_year.month}} {{month_year.year}} erased completely!\
+                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+                                                                    <span aria-hidden="true">&times;</span>\
+                                                                </button>\
+                                                            </div>');
 
-                                  if (response == 1) {
-                                      // Remove row from Table
-                                      $(el).closest('tr').css('background', 'red');
-                                      $(el).closest('tr').fadeOut(800, function () {
-                                          $(this).remove();
-                                      });
-                                  } else {
-                                      alert('Invalid Selection.');
-                                  }
+                                        
+                                        $('#alerts-container').append(alertDiv);
+                                    } else {
+                                        // Show error alert
+                                        var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">\
+                                                            Invalid Selection.\
+                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+                                                                <span aria-hidden="true">&times;</span>\
+                                                            </button>\
+                                                        </div>');
+                                        $('#alerts-container').append(alertDiv);
+                                    }
 
-                              }
+                                }
 
-                          });
-                          setInterval('location.reload()', 1000);
-                      }
-                  },
-                  cancel: function () {
+                            });
+                            // setInterval('location.reload()', 1000);
+                            setTimeout(function () {
+                                location.href = '/publishers/choose-category';
+                            }, 5000);
+                        }
+                    },
+                    cancel: function () {
 
-                  }
-              }
-          });
+                    }
+                }
+            });
 
-      });
+        });
 
-  });
+    });
 </script>
 {% endblock %}

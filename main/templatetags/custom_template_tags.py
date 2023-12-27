@@ -1,6 +1,7 @@
 from django import template
 from random import randint
-from ..models import PublisherProfile, PublisherReport
+from ..models import PublisherProfile, PublisherReport, MonthYear
+from django.db.models import Count
 from django.utils import timezone
 import math
 
@@ -162,5 +163,38 @@ def pending_report_query(username, month_year_id):
         publisher_username=username, month_year_id=month_year_id).count()
     return report
 
- 
-    
+@register.simple_tag
+def current_month_year():
+    monthYear = MonthYear.objects.get(current=1)
+    return monthYear
+
+@register.simple_tag
+def open_month():
+    month = MonthYear.objects.values('month').annotate(count=Count('month'))
+    return month
+
+@register.simple_tag
+def open_year():
+    year = MonthYear.objects.values('year').annotate(count=Count('year'))
+    return year    
+
+@register.simple_tag
+def multiple_months_report_avg(total, selected_months):
+    avg = total/selected_months
+    return avg
+
+@register.simple_tag
+def first_letter_tag(str):
+   if str and str[0].isalpha():
+     first_letter = str[0]
+   return first_letter  
+
+@register.simple_tag
+def follower_phone_tag(phone, username):
+    follower = PublisherProfile.objects.filter(phone=phone).exclude(username=username)
+    if follower.count() > 0:
+        follower_phone = ''
+    else:
+        follower_phone = phone    
+  
+    return follower_phone  

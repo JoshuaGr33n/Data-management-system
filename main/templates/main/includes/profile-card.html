@@ -1,0 +1,40 @@
+{% load static %}
+{% load custom_template_tags %}
+<div class="col-12 mb-4">
+    <div class="card border-light text-center p-0">
+        <div class="profile-cover rounded-top" data-background="../../assets/img/profile-cover.jpg">
+        </div>
+        {% if profile.pioneer == "1" %}
+        {% setPioneer "Regular Pioneer" as pioneer %}
+        {% elif profile.pioneer == "2" %}
+        {% setPioneer "Auxiliary Pioneer" as pioneer %}
+        {% else %}
+        {% setPioneer "" as pioneer %}
+        {% endif %}
+
+        {% if profile.appointment == "1" %}
+        {% setAppointment "Elder" as appointment %}
+        {% elif profile.appointment == "2" %}
+        {% setAppointment "Ministerial Servant" as appointment %}
+        {% else %}
+        {% setAppointment "" as appointment %}
+        {% endif %}
+        <div class="card-body pb-5"><img src="{% static 'main/assets/img/team/profile-picture-1.jpg' %}"
+                class="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" alt="Neil Portrait">
+            <h4 class="h3"><span class="name">{{ profile.first_name }} {{ profile.last_name }}</span></h4>
+            <h5 class="font-weight-normal">{{ appointment }}</h5>
+            <h5 class="font-weight-normal">{{ pioneer }}</h5>
+            <p class="text-gray mb-4">{{ profile.status }}</p>
+            {% if profile.username == profile.parent_id %}
+            {% if nav == 'followers' %}
+            <span>Followers (<span class="no_of_followers">{{no_of_followers}}</span>)</span>
+            {% else %}
+            <a class="btn btn-sm btn-primary mr-2" href="{% url 'publisher-profile-followers' profile.username %}"><span
+                    class="fas fa-user mr-1"></span> Followers</a>
+            <!-- <a class="btn btn-sm btn-secondary" href="#">Send
+                        Message</a> -->
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>

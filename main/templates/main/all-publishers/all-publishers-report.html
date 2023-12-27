@@ -60,7 +60,7 @@
           <td>
             {{ forloop.counter }}
           </td>
-          <td><a href="/publisher/profile" class="d-flex align-items-center"><img
+          <td><a href="/publisher-profile/{{ publisher_report_name.username}}" class="d-flex align-items-center"><img
                 src="{% static 'main/assets/img/blank.png' %}" class="user-avatar rounded-circle mr-3"
                 alt="{{publisher_report_name.first_name}} {{publisher_report_name.last_name}}">
               <div class="d-block"><span class="font-weight-bold"> <span class="{{name_tag}}"></span>

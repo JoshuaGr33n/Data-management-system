@@ -1,4 +1,3 @@
-
 {% extends 'main/base2.html' %}
 
 {% block title %}
@@ -9,101 +8,108 @@ Choose Category
 {% load static %}
 {% load custom_template_tags %}
 <main class="content">
-  {% include "main/includes/header.html" %} 
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-          <div class="d-block mb-4 mb-md-0">
-            <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
-                <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                    <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
-            <li class="breadcrumb-item"><a href="/publishers/all-active-publishers">All Publishers</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Select Report Category</li>
-          </ol>
-        </nav>
-        <h2 class="h4">Report</h2>
-        <p class="mb-0">Select Report Category</p>
-      </div>
-      <div class="btn-toolbar mb-2 mb-md-0">
-        <!-- <a href="select-month-year.html" class="btn btn-sm btn-success" style="margin-right:10px"><span
+  {% include "main/includes/header.html" %}
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    <div class="d-block mb-4 mb-md-0">
+      <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+        <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+          <li class="breadcrumb-item"><a href="/dashboard"><span class="fas fa-home"></span></a></li>
+          <li class="breadcrumb-item"><a href="/publishers/all-active-publishers">All Publishers</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Select Report Category</li>
+        </ol>
+      </nav>
+      <h2 class="h4">Report</h2>
+      <p class="mb-0">Select Report Category</p>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <!-- <a href="select-month-year.html" class="btn btn-sm btn-success" style="margin-right:10px"><span
             class="fas  mr-2"></span>Report For The Past Months</a> -->
 
-            <a href="select-month-year.php" class="btn btn-sm btn-info" style="margin-right:10px"><span
-              class="fas"></span>Report For Multiple Months</a>
-  
-              <button data-toggle="modal" data-target="#export_report__template_Modal" class="btn btn-sm btn-success" style="margin-right:10px"><span
-                      class=""></span>Export All Publishers Report Template</button>
+      <a href="{% url 'select-multiple-months-report' %}" class="btn btn-sm btn-info" style="margin-right:10px"><span
+          class="fas"></span>Report For Multiple Months</a>
 
-            <button class="btn btn-sm btn-success mobile-check" style="margin-right:10px;" data-toggle="modal"
-                    data-target="#import_report_Modal">
-                    <span class="fas"></span>Import Reports</button>
+      <button data-toggle="modal" data-target="#export_report__template_Modal" class="btn btn-sm btn-success"
+        style="margin-right:10px"><span class=""></span>Export All Publishers Report Template</button>
 
-           <a href="/publishers/all-active-publishers" class="btn btn-sm btn-primary" style="margin-right:10px">Back</a>
+      <button class="btn btn-sm btn-success mobile-check" style="margin-right:10px;" data-toggle="modal"
+        data-target="#import_report_Modal">
+        <span class="fas"></span>Import Reports</button>
+
+      <a href="/publishers/all-active-publishers" class="btn btn-sm btn-primary" style="margin-right:10px">Back</a>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6" style="margin:auto;">
+    <div class="card border-light shadow-sm">
+      <div class="card-header d-flex align-items-center border-bottom border-light">
+        <h3 class="h5 mb-0">Report Category</h3>
+        <div class="ml-auto">{% if messages %}
+          <ul class="error-messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="Post" action="{% url 'choose-category' %}">
+          {% csrf_token %}
+          <div class="form-group mb-4"><label for="Month">Month</label>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon3">
+                <span class="fas fa-calendar-alt"></span>
+              </span>
+              <select class="form-select mb-0" id="Month" name="Month" aria-label="Month" required>
+                <option value="{{current.month}}">{{current.month}}</option>
+                {% for month in all_month %}
+                <option value="{{month.month}}">{{month.month}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <span></span>
+          </div>
+
+          <div class="form-group mb-4"><label for="Year">Year</label>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon3">
+                <span class="fas fa-calendar-alt"></span>
+              </span>
+              <select class="form-select mb-0" id="Year" name="Year" aria-label="Year" required>
+                <option value="{{current.year}}">{{current.year}}</option>
+                {% for year in all_year %}
+                <option value="{{year.year}}">{{year.year}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <span></span>
+          </div>
+
+          <div class="form-group mb-4"><label for="Category">Publisher Category</label>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon3">
+                <span class="fas fa-user"></span>
+              </span>
+              <select class="form-select mb-0" id="Category" name="Category" aria-label="Category" required>
+                <option value="one">All Publishers</option>
+                <option value="two">Regular Pioneers</option>
+                <option value="three">Auxiliary Pioneers</option>
+                <option value="four">Elders</option>
+                <option value="five">Ministerial Servants</option>
+              </select>
+            </div>
+            <span></span>
+          </div>
+          <input type="submit" class="btn btn-block btn-primary" value="Confirm" name="confirm" id="confirm" />
+        </form>
       </div>
     </div>
-        <div class="col-12 col-lg-6" style="margin:auto;">
-            <div class="card border-light shadow-sm">
-              <div class="card-header d-flex align-items-center border-bottom border-light">
-                <h3 class="h5 mb-0">Report Category</h3>
-                <div class="ml-auto">{{err}}</div>
-              </div>
-              <div class="card-body">
-               <form method="Post" action="{% url 'choose-category' %}">
-                {% csrf_token %}
-                  <div class="form-group mb-4"><label for="Month">Month</label>
-                    <div class="input-group">
-                          <span class="input-group-text" id="basic-addon3">
-                               <span class="fas fa-calendar-alt"></span>
-                            </span>
-                     <select class="form-select mb-0" id="Month" name="Month" aria-label="Month" required>
-                          <option value="{{current.month}}">{{current.month}}</option>
-                          {% for month in all_month %}
-                          <option value="{{month.month}}">{{month.month}}</option>
-                          {% endfor %}
-                      </select>           
-                   </div>
-                   <span></span>
-                 </div>
-
-                 <div class="form-group mb-4"><label for="Year">Year</label>
-                    <div class="input-group">
-                          <span class="input-group-text" id="basic-addon3">
-                               <span class="fas fa-calendar-alt"></span>
-                            </span>
-                     <select class="form-select mb-0" id="Year" name="Year" aria-label="Year" required>
-                          <option value="{{current.year}}">{{current.year}}</option>
-                          {% for year in all_year %}
-                          <option value="{{year.year}}">{{year.year}}</option>
-                          {% endfor %}
-                      </select>           
-                   </div>
-                   <span></span>
-                 </div>
+  </div>
 
 
-                 <div class="form-group mb-4"><label for="Category">Publisher Category</label>
-                    <div class="input-group">
-                          <span class="input-group-text" id="basic-addon3">
-                               <span class="fas fa-user"></span>
-                            </span>
-                     <select class="form-select mb-0" id="Category" name="Category" aria-label="Category" required>
-                          <option value="one">All Publishers</option>
-                          <option value="two">Regular Pioneers</option>
-                          <option value="three">Auxiliary Pioneers</option>
-                          <option value="four">Elders</option>
-                          <option value="five">Ministerial Servants</option>
-                      </select>           
-                   </div>
-                   <span></span>
-                 </div>
-                 <input type="submit" class="btn btn-block btn-primary" value="Confirm" name="confirm" id ="confirm"/>
-                </form>
-                </div>
-            </div>
-          </div>
-    
-     
-    <footer class="footer section py-5">
-     
-    </footer>
-  </main>
-  {% include "main/includes/js.html" %}
-  {% endblock %} 
+  <footer class="footer section py-5">
+
+  </footer>
+  {% include "main/includes/modals.html" %}
+</main>
+{% include "main/includes/js.html" %}
+{% endblock %}
